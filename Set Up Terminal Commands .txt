@@ -1,0 +1,12 @@
+ROCK PAPER SCISSORS PROJECT
+conda create --name project #create virtual environment
+conda activate project 
+conda install pip #package manager
+pip install tensorflow
+pip install opencv-python
+
+IN GitBash
+sudo apt install python3-pip
+pip install PACKAGE_NAME
+pip uninstall PACKAGE_NAME
+pip --help

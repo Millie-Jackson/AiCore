@@ -1,0 +1,4 @@
+INTEGRATER(IDE)  = (VSCode) Integrated Development Environment, software that allows you to work with different file types, languages and environments in one place (VSCode)
+INTERPRETER      = Like a dictionary that interprets commands from multiple programming languages
+PACKAGE MANANGER = (Anaconda/Miniconda/PIP) Access and manage all the software needed for a project
+KERNEL           = A package thats running the code

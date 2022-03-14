@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)https://cs.stanford.edu/people/nick/py/ -->
+<html><script>(function(){window['_docs_annotate_canvas_by_ext']='kohfgcgbkjodfcfkcackpagifgbcmimk';})();</script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Python Guide</title>
+
+<link rel="stylesheet" href="./Python Guide_files/book.css">
+<script src="./Python Guide_files/book.js.download"></script>
+
+<style>
+pre.reveal { }  /* mark pre that should get this setup */
+span.phide { display:none; }
+span.pshow { color:darkgreen;} /* display:inline; */
+
+
+</style>
+
+</head>
+<body data-new-gr-c-s-check-loaded="14.1051.0" data-gr-ext-installed="">
+
+<nav><div id="toc"><p class="entry big"><a href="https://cs.stanford.edu/people/nick/py/">Python Guide</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-about.html">About Python</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-interpreter.html">Python Interpreter</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-command.html">Command Line</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-keyboard.html">Keyboard Shortcuts</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-style1.html">Style1</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-style-readable.html">Style Readable</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-style-decomposition.html">Style Decomp</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-var.html">Variables</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-math.html">Math</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-function.html">Functions</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-debugging.html">Debugging</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-doctest.html">Doctests</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-for.html">For Loop</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-while.html">While Loop</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-if.html">If and Comparisons</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-boolean.html">Boolean and or not</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-range.html">Range</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-string.html">Strings</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-print.html">print() Standard Out</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-input.html">input()</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-file.html">File Read Write</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-list.html">Lists</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-main.html">main() Command Line Args</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-dict.html">Dicts</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-nocopy.html">Python No Copy / is</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-tuple.html">Tuples</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-map-lambda.html">Map Lambda</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-comprehension.html">Comprehensions</a></p>
+<p class="entry"><a href="https://cs.stanford.edu/people/nick/py/python-sort.html">Sorting</a></p>
+<p class="entry">&nbsp;</p>
+</div></nav>
+
+<main>
+
+<h1>Python Guide</h1>
+
+
+<p>This is a working draft of Nick Parlante's Python guide for use with CS106A. The guide is hosted at <a href="https://cs.stanford.edu/people/nick/py/">cs.stanford.edu/people/nick/py/</a>, and the plan is to grow and maintain it as a free web resource. You should also be able to find it linked off the <a href="http://web.stanford.edu/class/cs106a/">CS106A home page</a>.
+
+</p><p>Please mail nick.parlante -at- cs.stanford.edu with any suggestions with "python" in the subject.
+
+
+
+
+</p><p>&nbsp;
+
+</p><p class="small">Copyright 2020 Nick Parlante
+
+</p></main>
+
+
+
+<script>mendeleyWebImporter = {
+  downloadPdfs(e,t) { return this._call('downloadPdfs', [e,t]); },
+  open() { return this._call('open', []); },
+  setLoginToken(e) { return this._call('setLoginToken', [e]); },
+  _call(methodName, methodArgs) {
+    const id = Math.random();
+    window.postMessage({ id, token: '0.13741253534850384', methodName, methodArgs }, 'https://cs.stanford.edu');
+    return new Promise(resolve => {
+      const listener = window.addEventListener('message', event => {
+        const data = event.data;
+        if (typeof data !== 'object' || !('result' in data) || data.id !== id) return;
+        window.removeEventListener('message', listener);
+        resolve(data.result);
+      });
+    });
+  }
+};</script><iframe id="nr-ext-rsicon" style="position: absolute; display: none; width: 50px; height: 50px; z-index: 2147483647; border-style: none; background: transparent;" src="./Python Guide_files/saved_resource.html"></iframe></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

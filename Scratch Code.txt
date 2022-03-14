@@ -1,0 +1,13 @@
+cap = cv2.VideoCapture(0)
+
+
+
+
+
+getReady = True
+    countdown = 3
+    while getReady == True:
+        print(countdown)
+        countdown -1
+        if countdown < 0:
+            getReady = False
