@@ -1,7 +1,5 @@
 from selenium import webdriver
-driver = webdriver.Chrome()
-
-#from selenium.webdriver import chrome
+from selenium.webdriver import chrome
 #from selenium.webdriver.chrome.options import Options
 #from selenium.webdriver.common.keys import Keys
 #from selenium.webdriver.common.by import By
@@ -9,6 +7,19 @@ driver = webdriver.Chrome()
 #from webdriver_manager.chrome import ChromeDriverManager
 
 import time
+
+class scraper:
+    driver = webdriver.Chrome()
+
+    url = "https://www.pickuplimes.com/"
+    driver.get(url) 
+
+    print("running")
+
+    time.sleep(3)
+    driver.quit()
+
+#scraper()
 
 #class Scraper:
 #    def __init__(self, url, options=None):
