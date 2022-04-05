@@ -8,17 +8,21 @@ from selenium.webdriver import chrome
 
 import time
 
+driver = webdriver.Chrome()
+
 class scraper:
     def getURL(url):
-        driver = webdriver.Chrome()
         driver.get(url)
 
-    #print("running")
+    def getTitle():
+        print(driver.title)
+
 
     #time.sleep(3)
     #driver.quit()
 
 scraper.getURL('https://www.pickuplimes.com/')
+scraper.getTitle()
 
 #    def __init__(self, url, options=None):
 #        self.url = url
