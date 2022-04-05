@@ -3,7 +3,7 @@
 import scraper
 import time
 
-scraper()
+scraper.getURL()
 
 #bot = scraper.Scraper('https://www.metasrc.com/5v5')
 #bot.accept_cookies('Cookie Accept Path', 'iFrame Path') # Site doenst have cookies

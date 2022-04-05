@@ -9,17 +9,17 @@ from selenium.webdriver import chrome
 import time
 
 class scraper:
-    driver = webdriver.Chrome()
+    def getURL():
+        driver = webdriver.Chrome()
+        url = "https://www.pickuplimes.com/"
+        driver.get(url)
 
-    url = "https://www.pickuplimes.com/"
-    driver.get(url) 
+    #print("running")
 
-    print("running")
+    #time.sleep(3)
+    #driver.quit()
 
-    time.sleep(3)
-    driver.quit()
-
-#scraper()
+#scraper.getURL()
 
 #class Scraper:
 #    def __init__(self, url, options=None):
