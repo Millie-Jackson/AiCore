@@ -16,13 +16,14 @@ class scraper:
 
     def getTitle():
         print(driver.title)
-
-
-    #time.sleep(3)
-    #driver.quit()
+    
+    def quit():
+        time.sleep(3)
+        driver.quit()
 
 scraper.getURL('https://www.pickuplimes.com/')
 scraper.getTitle()
+scraper.quit()
 
 #    def __init__(self, url, options=None):
 #        self.url = url

@@ -3,8 +3,11 @@
 import scraper
 import time
 
-scraper.getURL('https://www.pickuplimes.com/')
-scraper.getTitle()
+bot = scraper()
+
+bot.getURL('https://www.pickuplimes.com/')
+bot.getTitle()
+bot.quit()
 
 #bot = scraper.Scraper('https://www.metasrc.com/5v5')
 #bot.accept_cookies('Cookie Accept Path', 'iFrame Path') # Site doenst have cookies
