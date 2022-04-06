@@ -45,10 +45,15 @@ class scraper:
         title = driver.find_element(By.ID, 'nav-image')
         title.click()
 
+    def findRecipeList():
+        button = driver.find_element(By.LINK_TEXT, 'Recipes')
+        button.click()
+
 scraper.getURL('https://www.pickuplimes.com/')
 scraper.getTitle()
 #scraper.getSourceCode()
-scraper.search("lemon")
+#scraper.search("lemon")
+scraper.findRecipeList()
 scraper.home()
 scraper.quit()
 
