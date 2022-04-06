@@ -9,6 +9,8 @@ bot.getURL('https://www.pickuplimes.com/')
 bot.getTitle()
 #bot.getSourceCode()
 bot.search("lemon")
+bot.home()
+time.sleep(3)
 bot.quit()
 
 #bot = scraper.Scraper('https://www.metasrc.com/5v5')

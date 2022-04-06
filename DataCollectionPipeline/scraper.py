@@ -40,11 +40,16 @@ class scraper:
                 print("Exception: No search bar found")
         except:
             print("Exception: No search button found")
+    
+    def home():
+        title = driver.find_element(By.ID, 'nav-image')
+        title.click()
 
 scraper.getURL('https://www.pickuplimes.com/')
 scraper.getTitle()
 #scraper.getSourceCode()
 scraper.search("lemon")
+scraper.home()
 scraper.quit()
 
 #    def __init__(self, url, options=None):
