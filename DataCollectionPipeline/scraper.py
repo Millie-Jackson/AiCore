@@ -1,9 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver import chrome
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
 #from selenium.webdriver.chrome.options import Options
-#from selenium.webdriver.common.keys import Keys
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.support.ui import WebDriverWait
 #from webdriver_manager.chrome import ChromeDriverManager
 
 import time
@@ -21,8 +22,29 @@ class scraper:
         time.sleep(3)
         driver.quit()
 
+    def getSourceCode():
+        print(driver.page_source)
+
+    def search(search_term):
+        try:
+            button = driver.find_element(By.ID, 'nav-searchbar-btn')
+            button.click()
+            try:
+                search_bar = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "sb")))
+                try:
+                    search_bar.send_keys(search_term)
+                    search_bar.send_keys(Keys.RETURN) # Return = Enter
+                except:
+                    print("Exception: No search term input")
+            except:
+                print("Exception: No search bar found")
+        except:
+            print("Exception: No search button found")
+
 scraper.getURL('https://www.pickuplimes.com/')
 scraper.getTitle()
+#scraper.getSourceCode()
+scraper.search("lemon")
 scraper.quit()
 
 #    def __init__(self, url, options=None):
