@@ -18,9 +18,9 @@ class scraper:
     def getTitle():
         print(driver.title)
     
-    def quit():
+    def closeSession():
         time.sleep(3)
-        driver.quit()
+        driver.close()
 
     def getSourceCode():
         print(driver.page_source)
@@ -76,7 +76,7 @@ scraper.home()
 scraper.findRecipeList()
 scraper.getRecipes()
 #time.sleep(3)
-scraper.quit()
+scraper.closeSession()
 
 #    def __init__(self, url, options=None):
 #        self.url = url
@@ -110,5 +110,3 @@ scraper.quit()
 #    def write_in_search_bar(self, text: str, xpath: str) -> None:
 #        search_bar = self.click_search_bar(xpath)
 #        search_bar.send_keys(text)
-
-print("END")
