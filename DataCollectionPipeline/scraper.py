@@ -46,12 +46,21 @@ class scraper:
         title.click()
 
     def findRecipeList():
-        button = driver.find_element(By.LINK_TEXT, 'Recipes')
+        button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
         button.click()
+    
+    def acceptCookies():
+        try:
+            cookie_button = driver.find_element(By.XPATH, '/html/body/div/div[2]/div[2]')
+            cookie_button.click()
+            print("Removed Cookies")
+        except:
+            print("Exeption: Didnt Find Cookie Button")
 
 scraper.getURL('https://www.pickuplimes.com/')
 scraper.getTitle()
 #scraper.getSourceCode()
+scraper.acceptCookies()
 #scraper.search("lemon")
 scraper.findRecipeList()
 scraper.home()
