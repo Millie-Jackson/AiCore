@@ -66,15 +66,34 @@ class scraper:
         for i in articles:
             print("Recipe:" , i.text)
 
+    def getAllRecipePages():
+        pages = []
+        scraper.findRecipeList()
+        page = [driver.current_url]
+
+        #total_pages = driver.find_element(By.CLASS_NAME, 'page-text')
+
+        total_pages = [1, 2, 3, 4, 5]
+
+        for i in total_pages:
+            current_page = driver.current_url
+            url_change = "?page=" + str(i)
+            next_page = current_page + url_change
+            print(next_page)
+            pages.append(next_page)
+            print("Number of Pages:", len(pages))
+
 scraper.getURL('https://www.pickuplimes.com/')
 scraper.getTitle()
-#scraper.getSourceCode()
 scraper.acceptCookies()
+scraper.getAllRecipePages()
+#scraper.getSourceCode()
 #scraper.search("lemon")
 #time.sleep(3)
-scraper.home()
-scraper.findRecipeList()
-scraper.getRecipes()
+#scraper.home()
+#scraper.findRecipeList()
+#scraper.getRecipes()
+#scraper.getPageURL()
 #time.sleep(3)
 scraper.closeSession()
 
