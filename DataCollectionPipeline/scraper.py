@@ -57,13 +57,25 @@ class scraper:
         except:
             print("Exeption: Didnt Find Cookie Button")
 
+    def getRecipes():
+        main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'index-item-container')))      
+        print("Found results")
+        articles = main.find_elements(By.TAG_NAME, 'li')
+        print("Number of Recipes:", len(articles))
+
+        for i in articles:
+            print("Recipe:" , i.text)
+
 scraper.getURL('https://www.pickuplimes.com/')
 scraper.getTitle()
 #scraper.getSourceCode()
 scraper.acceptCookies()
 #scraper.search("lemon")
-scraper.findRecipeList()
+#time.sleep(3)
 scraper.home()
+scraper.findRecipeList()
+scraper.getRecipes()
+#time.sleep(3)
 scraper.quit()
 
 #    def __init__(self, url, options=None):
