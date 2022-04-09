@@ -5,16 +5,8 @@ import time
 
 bot = scraper()
 
-bot.getURL('https://www.pickuplimes.com/')
-bot.getTitle()
-bot.acceptCookies()
-bot.getAllRecipePages()
-#scraper.getSourceCode()
-#scraper.search("lemon")
-#time.sleep(3)
-#scraper.home()
-#scraper.findRecipeList()
-#scraper.getRecipes()
-#scraper.getPageURL()
-#time.sleep(3)
-bot.closeSession()
+if __name__ == "__main__":
+    bot.intitialize(bot, 'https://www.pickuplimes.com/', 'lemons')
+else:
+    print("Error: Driver closed because of initialize")
+    bot.close()

@@ -12,6 +12,21 @@ import time
 driver = webdriver.Chrome()
 
 class scraper:
+    def intitialize(self, url, search_term):
+        self.getURL(url)
+        self.getTitle()
+        self.acceptCookies()
+        self.getAllRecipePages()
+        self.getSourceCode()
+        self.search(search_term)
+        time.sleep(3)
+        self.home()
+        self.findRecipeList()
+        self.getRecipes()
+        self.getPageURL()
+        time.sleep(3)
+        self.closeSession()
+
     def getURL(url):
         driver.get(url)
 
