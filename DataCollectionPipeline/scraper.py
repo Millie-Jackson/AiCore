@@ -8,11 +8,13 @@ from selenium.webdriver.support import expected_conditions as EC
 #from webdriver_manager.chrome import ChromeDriverManager
 
 import time
+import uuid
 
 driver = webdriver.Chrome()
 
 class scraper:
     def intitialize(self, url, search_term):
+        global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
         #self.getURL(url)
         #self.getTitle()
         #self.acceptCookies()
@@ -24,7 +26,7 @@ class scraper:
         #self.findRecipeList()
         #self.getRecipes()
         #self.getPageURL()
-        self.getRecipeDetails(self)
+        #self.getRecipeDetails(self)
         #time.sleep(3)
         self.closeSession()
 
@@ -98,6 +100,15 @@ class scraper:
             print(next_page)
             pages.append(next_page)
             print("Number of Pages:", len(pages))
+
+    def getUniqueID(self, url):
+        
+        page_ID = url
+        just_ID = page_ID.replace(str("https://www.pickuplimes.com/recipe/"), "")
+
+        ids = (just_ID, uuid.uuid4())
+
+        return ids
 
     def getRecipeDetails(self):
         self.getURL('https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
