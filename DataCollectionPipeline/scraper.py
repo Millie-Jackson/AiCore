@@ -126,21 +126,21 @@ class scraper:
         directions = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol').text
         notes = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li').text
         storage = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li').text
-
         picture_main = driver.find_element(By.XPATH, '//*[@id="main-image-container"]/img')
-        picture1 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[1]')
-        picture2 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[2]')
-        picture3 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[3]')
-        picture4 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[4]')
-        picture5 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[5]')
-        picture6 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[6]')
-        picture7 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[7]')
-        picture8 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[8]')
-        pictures = [picture_main, picture1, picture2, picture3, picture4, picture5, picture6, picture7, picture8]
+
+        image_container = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]') # Find the container
+        image_list = image_container.find_elements(By.XPATH, 'img') # Find the children
+        print(len(image_list))
+        image_links= []
+
+        for i in image_list:
+            link = i.get_attribute('src')
+            image_links.append(link)
         
-        recipe_details = {'ID': [], 'Name': [], 'Tags': [], 'Description': [], 'Total Time': [], 'Prep Time': [], 'Cook Time': [], 'Allergens': [], 'Swaps': [], 'Free From': [], 'Ingredients': [], 'Directions': [], 'Notes': [], 'Storage': [], 'Image': []}
+        recipe_details = {'ID': [], 'Name': [], 'Photo': [],'Tags': [], 'Description': [], 'Total Time': [], 'Prep Time': [], 'Cook Time': [], 'Allergens': [], 'Swaps': [], 'Free From': [], 'Ingredients': [], 'Directions': [], 'Notes': [], 'Storage': [], 'Images': []}
         recipe_details['ID'].append(self.getUniqueID(self, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213'))
         recipe_details['Name'].append(name)
+        recipe_details['Photo'].append(picture_main)
         recipe_details['Tags'].append(tag)
         recipe_details['Description'].append(description)
         recipe_details['Total Time'].append(time_total)
@@ -153,10 +153,7 @@ class scraper:
         recipe_details['Directions'].append(directions)
         recipe_details['Notes'].append(notes)
         recipe_details['Storage'].append(storage)
-        recipe_details['Image'].append(pictures)
-        recipe_details
-        print(recipe_details)
-
+        recipe_details['Images'].append(image_list)
 
 scraper.getRecipeDetails(scraper)
 
