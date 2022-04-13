@@ -14,8 +14,8 @@ driver = webdriver.Chrome()
 
 class scraper:
     def intitialize(self, url, search_term):
-        global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
-        #self.getURL(url)
+        #global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
+        self.getURL()
         #self.getTitle()
         #self.acceptCookies()
         #self.getAllRecipePages()
@@ -26,7 +26,7 @@ class scraper:
         #self.findRecipeList()
         #self.getRecipes()
         #self.getPageURL()
-        #self.getRecipeDetails(self)
+        self.getRecipeDetails(self)
         #time.sleep(3)
         self.closeSession()
 
@@ -113,52 +113,53 @@ class scraper:
     def getRecipeDetails(self):
         self.getURL('https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
 
-        name = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/h1')
-        tag = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/a[1]/div/p')
-        description = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/span') 
-        time_total = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[2]')
-        time_prep = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[3]')
-        time_cook = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[4]')
-        allergens = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div') 
-        swap = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div')
-        free_from = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div')  
-        ingredients = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]')
-        directions = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol')
-        notes = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li')
-        storage = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li')
-        nutrition = driver.find_element(By.XPATH, '//*[@id="nut-info"]')
+        name = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/h1').text
+        tag = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/a[1]/div/p').text
+        description = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/span').text
+        time_total = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[2]').text
+        time_prep = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[3]').text
+        time_cook = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[4]').text
+        allergens = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div').text 
+        swap = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div').text
+        free_from = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div').text  
+        ingredients = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]').text
+        directions = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol').text
+        notes = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li').text
+        storage = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li').text
 
         picture_main = driver.find_element(By.XPATH, '//*[@id="main-image-container"]/img')
+        picture1 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[1]')
+        picture2 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[2]')
+        picture3 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[3]')
+        picture4 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[4]')
+        picture5 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[5]')
+        picture6 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[6]')
+        picture7 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[7]')
+        picture8 = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]/img[8]')
+        pictures = [picture_main, picture1, picture2, picture3, picture4, picture5, picture6, picture7, picture8]
+        
+        recipe_details = {'ID': [], 'Name': [], 'Tags': [], 'Description': [], 'Total Time': [], 'Prep Time': [], 'Cook Time': [], 'Allergens': [], 'Swaps': [], 'Free From': [], 'Ingredients': [], 'Directions': [], 'Notes': [], 'Storage': [], 'Image': []}
+        recipe_details['ID'].append(self.getUniqueID(self, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213'))
+        recipe_details['Name'].append(name)
+        recipe_details['Tags'].append(tag)
+        recipe_details['Description'].append(description)
+        recipe_details['Total Time'].append(time_total)
+        recipe_details['Prep Time'].append(time_prep)
+        recipe_details['Cook Time'].append(time_cook)
+        recipe_details['Allergens'].append(allergens)
+        recipe_details['Swaps'].append(swap)
+        recipe_details['Free From'].append(free_from)
+        recipe_details['Ingredients'].append(ingredients)
+        recipe_details['Directions'].append(directions)
+        recipe_details['Notes'].append(notes)
+        recipe_details['Storage'].append(storage)
+        recipe_details['Image'].append(pictures)
+        recipe_details
+        print(recipe_details)
 
-        #print("Recipe:", name.text)
-        #print("Type:", tag.text)
-        #print("Description:", description.text)
-        #print(time_total.text)
-        #print(time_prep.text)
-        #print(time_cook.text)
-        #print("Allergens:", allergens.text)
-        #print("Swap:", swap.text)
-        #print("Free from:", free_from.text)
-        #print(ingredients.text)
-        #print(directions.text)
-        #print("Notes:", notes.text)
-        #print("Storage:", storage.text)
 
-        self.closeSession()
-
-scraper.getURL('https://www.pickuplimes.com/')
-scraper.getTitle()
-scraper.acceptCookies()
-scraper.getAllRecipePages()
 scraper.getRecipeDetails(scraper)
-#scraper.getSourceCode()
-#scraper.search("lemon")
-#time.sleep(3)
-#scraper.home()
-#scraper.findRecipeList()
-#scraper.getRecipes()
-#scraper.getPageURL()
-#time.sleep(3)
+
 scraper.closeSession()
 
 #    def __init__(self, url, options=None):
