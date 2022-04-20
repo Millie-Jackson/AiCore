@@ -4,6 +4,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 #from selenium.webdriver.chrome.options import Options
 #from webdriver_manager.chrome import ChromeDriverManager
 
@@ -54,44 +57,65 @@ class scraper:
                     search_bar.send_keys(Keys.RETURN) # Return = Enter
                 except:
                     print("Exception: No search term input")
-            except:
+            except NoSuchElementException:
                 print("Exception: No search bar found")
-        except:
-            print("Exception: No search button found")
+        except TimeoutException:
+            print("Exception: Timeout: Search bar"))
     
     def home():
-        title = driver.find_element(By.ID, 'nav-image')
-        title.click()
+        try:
+            title = driver.find_element(By.ID, 'nav-image')
+            title.click()
+        except NoSuchElementException:
+            print("Exception: Title Not Found")
+        except TimeoutException:
+            print("Exception: Timeout: Title")
 
     def findRecipeList():
-        button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
-        button.click()
+        try:
+            button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
+            button.click()
+        except NoSuchElementException:
+            print("Exception: Recipe List Not Found")
+        except TimeoutException:
+            print("Exception: Timeout: Recipe List")
     
     def acceptCookies():
         try:
             cookie_button = driver.find_element(By.XPATH, '/html/body/div/div[2]/div[2]')
             cookie_button.click()
             print("Removed Cookies")
-        except:
+        except NoSuchElementException:
             print("Exeption: Didnt Find Cookie Button")
+        except TimeoutException:
+            print("Timeout: Accept Cookie")
 
     def getRecipes():
-        main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'index-item-container')))      
-        print("Found results")
-        articles = main.find_elements(By.TAG_NAME, 'li')
-        print("Number of Recipes:", len(articles))
+        try:
+            main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'index-item-container')))      
+            articles = main.find_elements(By.TAG_NAME, 'li')
+            print("Number of Recipes:", len(articles))
+        except NoSuchElementException:
+            print("Exception: Can't Find Recipe List")
+        except TimeoutException: 
+            print("Exception: Timeout: Can't Find Recipe List")
 
         for i in articles:
             print("Recipe:" , i.text)
 
-    def getAllRecipePages():
+    def getAllRecipePages(self):
         pages = []
+        self.getURL('https://www.pickuplimes.com/')
         scraper.findRecipeList()
         page = [driver.current_url]
 
-        #total_pages = driver.find_element(By.CLASS_NAME, 'page-text')
-
-        total_pages = [1, 2, 3, 4, 5]
+        try:
+            #total_pages = driver.find_element(By.CLASS_NAME, 'page-text') #actual
+            total_pages = [1, 2, 3, 4, 5] #temp to shorten runtime
+        except NoSuchElementException:
+            print("Exception: Total Pages Not Found")
+        except TimeoutException:
+            print("Exception: Timeout: Couldn't Find Total Pages")
 
         for i in total_pages:
             current_page = driver.current_url
@@ -113,20 +137,25 @@ class scraper:
     def getRecipeDetails(self):
         self.getURL('https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
 
-        name = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/h1').text
-        tag = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/a[1]/div/p').text
-        description = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/span').text
-        time_total = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[2]').text
-        time_prep = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[3]').text
-        time_cook = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[4]').text
-        allergens = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div').text 
-        swap = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div').text
-        free_from = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div').text  
-        ingredients = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]').text
-        directions = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol').text
-        notes = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li').text
-        storage = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li').text
-        picture_main = driver.find_element(By.XPATH, '//*[@id="main-image-container"]/img')
+        try:
+            name = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/h1').text
+            tag = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/a[1]/div/p').text
+            description = driver.find_element(By.XPATH, '//*[@id="header-info-col"]/div/header/span').text
+            time_total = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[2]').text
+            time_prep = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[3]').text
+            time_cook = driver.find_element(By.XPATH, '//*[@id="recipe-info-container"]/div[4]').text
+            allergens = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div').text 
+            swap = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div').text
+            free_from = driver.find_element(By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div').text  
+            ingredients = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]').text
+            directions = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol').text
+            notes = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li').text
+            storage = driver.find_element(By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li').text
+            picture_main = driver.find_element(By.XPATH, '//*[@id="main-image-container"]/img')
+        except NoSuchElementException:
+            print("Exception: One Or More Data Entry Not Found")
+        except TimeoutException:
+            print("Exception: Timeout: Didnt Find All Data Entries")
 
         image_container = driver.find_element(By.XPATH, '//*[@id="recipe-video"]/div[2]') # Find the container
         image_list = image_container.find_elements(By.XPATH, 'img') # Find the children
