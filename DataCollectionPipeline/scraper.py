@@ -1,3 +1,10 @@
+import time
+import uuid
+import json
+import os
+
+from json import JSONEncoder
+from uuid import UUID
 from selenium import webdriver
 from selenium.webdriver import chrome
 from selenium.webdriver.common.by import By
@@ -10,13 +17,10 @@ from selenium.common.exceptions import TimeoutException
 #from selenium.webdriver.chrome.options import Options
 #from webdriver_manager.chrome import ChromeDriverManager
 
-import time
-import uuid
-
 driver = webdriver.Chrome()
 
 class scraper:
-    def intitialize(self, url, search_term):
+    def intitialize(self, url, search_term, delay):
         #global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
         self.getURL()
         #self.getTitle()
@@ -48,7 +52,7 @@ class scraper:
 
     def search(search_term):
         try:
-            button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'nav-searchbar-btn')))
+            button = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.ID, 'nav-searchbar-btn')))
             button.click()
             try:
                 search_bar = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "sb")))
@@ -64,7 +68,7 @@ class scraper:
     
     def home():
         try:
-            title = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'nav-image')))
+            title = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.ID, 'nav-image')))
             title.click()
         except NoSuchElementException:
             print("Exception: Title Not Found")
@@ -73,7 +77,7 @@ class scraper:
 
     def findRecipeList():
         try:
-            button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
+            button = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
             button.click()
         except NoSuchElementException:
             print("Exception: Recipe List Not Found")
@@ -82,7 +86,7 @@ class scraper:
     
     def acceptCookies():
         try:
-            cookie_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[2]')))
+            cookie_button = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[2]')))
             cookie_button.click()
             print("Removed Cookies")
         except NoSuchElementException:
@@ -92,7 +96,7 @@ class scraper:
 
     def getRecipes():
         try:
-            main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, 'index-item-container')))      
+            main = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.ID, 'index-item-container')))      
             articles = main.find_elements(By.TAG_NAME, 'li')
             print("Number of Recipes:", len(articles))
         except NoSuchElementException:
@@ -138,26 +142,26 @@ class scraper:
         self.getURL('https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
 
         try:
-            name = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/h1'))).text
-            tag = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'//*[@id="header-info-col"]/div/header/a[1]/div/p'))).text
-            description = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/span'))).text
-            time_total = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[2]'))).text  
-            time_prep = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[3]'))).text
-            time_cook = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[4]'))).text
-            allergens = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div'))).text 
-            swap = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div'))).text
-            free_from = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div'))).text  
-            ingredients = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]'))).text
-            directions = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol'))).text
-            notes = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li'))).text
-            storage = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li'))).text
-            picture_main = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="main-image-container"]/img')))
+            name = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/h1'))).text
+            tag = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH,'//*[@id="header-info-col"]/div/header/a[1]/div/p'))).text
+            description = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/span'))).text
+            time_total = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[2]'))).text  
+            time_prep = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[3]'))).text
+            time_cook = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[4]'))).text
+            allergens = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div'))).text 
+            swap = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div'))).text
+            free_from = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div'))).text  
+            ingredients = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]'))).text
+            directions = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol'))).text
+            notes = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li'))).text
+            storage = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li'))).text
+            picture_main = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="main-image-container"]/img')))
         except NoSuchElementException:
             print("Exception: One Or More Data Entry Not Found")
         except TimeoutException:
             print("Exception: Timeout: Didnt Find All Data Entries")
 
-        image_container = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-video"]/div[2]'))) # Find the container
+        image_container = WebDriverWait(driver, seconds).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-video"]/div[2]'))) # Find the container
         image_list = image_container.find_elements(By.XPATH, 'img') # Find the children
         print(len(image_list))
         image_links= []
@@ -183,6 +187,33 @@ class scraper:
         recipe_details['Notes'].append(notes)
         recipe_details['Storage'].append(storage)
         recipe_details['Images'].append(image_list)
+
+        self.jsonFile(self)
+
+    '''This function creates a folder for all the data then creates a json file and writes the data dictionary to it'''
+    def jsonFile(self):
+        '''Creates a folder called 'raw_data' in the path for the json file to be saved in
+        Uses a try except catch as it will throw an error if the folder already exists'''
+        try:
+            directory = "raw_data"
+            parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline"
+            path = os.path.join(parent_dir, directory)
+            os.mkdir(path)
+            print("Directory '% s' created" % directory)
+        except:
+            print("Root Folder Already Exists")
+
+        '''Deals with TypeError: Object of type UUID is not JSON serializable by encoding the UUID'''
+        JSONEncoder_olddefault = JSONEncoder.default
+        def JSONEncoder_newdefault(self, o):
+            if isinstance(o, UUID): return str(o)
+            return JSONEncoder_olddefault(self, o)
+        JSONEncoder.default = JSONEncoder_newdefault
+
+        '''Stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
+        The dicrionary is converted to a string using str() to deal with 'TypeError: Object of type WebElement is not JSON serializable'''
+        with open(os.path.join('raw_data', 'data.json'), 'w') as json_file:
+            json.dump(str(self.recipe_details), json_file)
 
 scraper.getRecipeDetails(scraper)
 
