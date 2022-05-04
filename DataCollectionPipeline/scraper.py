@@ -215,6 +215,31 @@ class scraper:
         with open(os.path.join('raw_data', 'data.json'), 'w') as json_file:
             json.dump(str(self.recipe_details), json_file)
 
+    def downloadImage(url, recipeName):
+        '''Creates a folder called 'images' in the path for the image files to be saved in
+        Uses a try except catch as it will throw an error if the folder already exists
+        Adds User-Agent Headers to bypass 403 error
+        Downloads an image into the images folder'''
+        try:
+            directory = "images"
+            parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline"
+            path = os.path.join(parent_dir, directory)
+            os.mkdir(path)
+            print("Directory '% s' created" % directory)
+        except:
+            print("Root Folder 'images' Already Exists")
+        
+        try:
+            # Adds headers to resolve 403 Fobidden Error
+            opener=urllib.request.build_opener()
+            opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
+            urllib.request.install_opener(opener)
+
+            image = urllib.request.urlretrieve('https://cdn.pickuplimes.com/cache/29/ae/29ae9ff86850e9955f57a7ab8d5d29db.jpg', 'images/recipeName.jpg')
+            testImage = urllib.request.urlretrieve('https://cdn.vox-cdn.com/thumbor/jGJ8H_Z4JPl5CyDY-cIWpkhzELw=/0x0:2040x1360/920x613/filters:focal(857x517:1183x843):format(webp)/cdn.vox-cdn.com/uploads/chorus_image/image/68829483/acastro_210104_1777_google_0001.0.jpg', 'images/test.jpg')
+        except:
+            print("Error Downloading Image")
+
 scraper.getRecipeDetails(scraper)
 
 scraper.closeSession()
