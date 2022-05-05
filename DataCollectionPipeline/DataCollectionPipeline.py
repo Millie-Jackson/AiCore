@@ -1,6 +1,7 @@
 #import numpy as np
 
-from scraper import scraper
+#from scraper import scraper
+import scraper
 import time
 
 bot = scraper()
