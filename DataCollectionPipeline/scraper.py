@@ -22,6 +22,14 @@ from selenium.webdriver.support import expected_conditions as EC
 
 driver = webdriver.Chrome()
 
+class data:
+    articles = []
+    currentURL = ""
+    image_links = []
+    pages = []
+    recipe_details = {}
+    recipeLinks = []
+
 class scraper:
     def intitialize(self, url, search_term, delay):
         global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
@@ -29,42 +37,55 @@ class scraper:
         self.getURL(url)
         #self.getTitle()
         #self.acceptCookies()
-        #self.getAllRecipePages()
+        #self.getAllRecipePages(self) # Could be private?
         #self.getSourceCode()
         #self.search(search_term)
         #time.sleep(3)
         #self.home()
-        #self.findRecipeList()
-        #self.getRecipes()
+        #self.findRecipeList() # Could be private?
+        #self.getRecipes(self, 'https://www.pickuplimes.com/recipe/?page=5')
         #self.getPageURL()
         #self.getUniqueID()
         #self.getRecipeDetails(self)
         #self.jsonFile() # Could be private?
         #self.downloadImage('/html/body/img', 'nameForImage') # Could be private?
-        self.getImages(self, 'https://www.pickuplimes.com/recipe/harissa-spiced-beans-898')
-        #time.sleep(3)
+        #self.getRecipeDetails(self)
+        self.run(self)
 
         self.closeSession()
 
+    def run(self):
+        data.currentURL = self.findRecipeList(self)
+        self.getAllRecipePages(self, data.currentURL)
+        self.getRecipes(self, data.currentURL)
+        for i in data.recipeLinks:
+            data.currentURL = i
+            self.makeImageFilename(self, data.currentURL)
+
     def getURL(url):
-        driver.get(url)
+        '''Navigates to a website using a url passed as a perameter.'''
+        driver.get(url) 
 
     def getTitle():
+        '''Fetches the title and prints it to screen.'''
         print(driver.title)
-    
+
     def closeSession():
+        '''Closes the driver after 3 seconds.'''
         time.sleep(3)
-        driver.close()
+        driver.quit()
 
     def getSourceCode():
+        '''Fetches source code for the page.'''
         print(driver.page_source)
 
     def search(search_term):
+        '''Finds search bar, types in the search term which it takes as a perameter and clicks to navigate to the next page.'''
         try:
             button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'nav-searchbar-btn')))
             button.click()
             try:
-                search_bar = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "sb")))
+                search_bar = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.NAME, "sb")))
                 try:
                     search_bar.send_keys(search_term)
                     search_bar.send_keys(Keys.RETURN) # Return = Enter
@@ -76,6 +97,7 @@ class scraper:
             print("Exception: Timeout: Search bar")
     
     def home():
+        '''Finds the title and clicks it.'''
         try:
             title = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'nav-image')))
             title.click()
@@ -84,16 +106,20 @@ class scraper:
         except TimeoutException:
             print("Exception: Timeout: Title")
 
-    def findRecipeList():
+    def findRecipeList(self):
+        '''Finds the recipe tab and clicks it.'''
         try:
-            button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
+            button = WebDriverWait(driver,5).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
             button.click()
         except NoSuchElementException:
             print("Exception: Recipe List Not Found")
         except TimeoutException:
             print("Exception: Timeout: Recipe List")
-    
+
+        return self.getPageURL()
+
     def acceptCookies():
+        '''Finds the accept cookies button and clicks it.'''
         try:
             cookie_button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[2]')))
             cookie_button.click()
@@ -103,24 +129,27 @@ class scraper:
         except TimeoutException:
             print("Timeout: Accept Cookie")
 
-    def getRecipes():
+    def getRecipes(self, url):
+        '''Finds the recipe container and puts all the recipes in a list.'''
+
         try:
-            main = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'index-item-container')))      
-            articles = main.find_elements(By.TAG_NAME, 'li')
-            print("Number of Recipes:", len(articles))
+            main = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//*[@id='index-item-container']/div/div[2]/ul"))) 
         except NoSuchElementException:
             print("Exception: Can't Find Recipe List")
         except TimeoutException: 
             print("Exception: Timeout: Can't Find Recipe List")
 
-        for i in articles:
-            print("Recipe:" , i.text)
+        data.articles = main.find_elements(By.TAG_NAME, 'li')
+        for i in data.articles:
+            tag = i.find_element(By.TAG_NAME, 'a')
+            data.recipeLinks.append(tag.get_attribute('href'))
 
-    def getAllRecipePages(self):
-        pages = []
-        self.getURL('https://www.pickuplimes.com/')
-        scraper.findRecipeList()
-        page = [driver.current_url]
+    def getPageURL():
+        '''Returns the current page url.'''
+        return driver.current_url
+
+    def getAllRecipePages(self, url):
+        '''Navigates to each recipe page by modifying the current url and stores them in a list.'''
 
         try:
             #total_pages = driver.find_element(By.CLASS_NAME, 'page-text') #actual
@@ -131,14 +160,13 @@ class scraper:
             print("Exception: Timeout: Couldn't Find Total Pages")
 
         for i in total_pages:
-            current_page = driver.current_url
+            data.currentURL = driver.current_url
             url_change = "?page=" + str(i)
-            next_page = current_page + url_change
-            print(next_page)
-            pages.append(next_page)
-            print("Number of Pages:", len(pages))
+            next_page = data.currentURL + url_change
+            data.pages.append(next_page)
 
     def getUniqueID(self, url):
+        '''Creates a uuid for each recipe taking a url as a perameter'''
         
         page_ID = url
         just_ID = page_ID.replace(str("https://www.pickuplimes.com/recipe/"), "")
@@ -147,24 +175,136 @@ class scraper:
 
         return ids
 
-    def getRecipeDetails(self):
-        self.getURL('https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
+    def getRecipeDetails(self, url):
+        self.getURL(url)
 
         try:
-            name = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/h1'))).text
-            tag = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH,'//*[@id="header-info-col"]/div/header/a[1]/div/p'))).text
-            description = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/span'))).text
-            time_total = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[2]'))).text  
-            time_prep = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[3]'))).text
-            time_cook = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[4]'))).text
-            allergens = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div'))).text 
-            swap = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div'))).text
-            free_from = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div'))).text  
-            ingredients = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]'))).text
-            directions = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol'))).text
-            notes = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li'))).text
-            storage = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li'))).text
-            picture_main = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="main-image-container"]/img')))
+            try:    
+                name = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/h1'))).text
+            except NoSuchElementException:
+                print("Exception: Name Not Found")
+                name = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Name")
+                name = "N/A"  
+
+            try:
+                tag = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH,'//*[@id="header-info-col"]/div/header/a[1]/div/p'))).text
+            except NoSuchElementException:
+                print("Exception: Tag Not Found")
+                tag = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Tag")
+                tag = "N/A"
+
+            try:
+                description = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/span'))).text
+            except NoSuchElementException:
+                print("Exception: Description Not Found")
+                description = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Description")
+                description = "N/A"
+
+            try:
+                time_total = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[2]'))).text  
+            except NoSuchElementException:
+                print("Exception: Total-Time Not Found")
+                time_total = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Total-Time")
+                time_total = "N/A"
+
+            try:
+                time_prep = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[3]'))).text
+            except NoSuchElementException:
+                print("Exception: Prep-Time Not Found")
+                time_pre = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Prep-Time")
+                time_pre = "N/A"
+            
+            try:
+                time_cook = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[4]'))).text
+            except NoSuchElementException:
+                print("Exception: Cook-Time Not Found")
+                time_cook = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Cook-Time")
+                time_cook = "N/A" 
+
+            try:
+                allergens = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div'))).text 
+            except NoSuchElementException:
+                print("Exception: Allergens Not Found")
+                allergens = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Allergens")
+                allergens = "N/A" 
+
+            try: 
+                swap = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div'))).text
+            except NoSuchElementException:
+                print("Exception: Swap Not Found")
+                swap = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Swap")
+                swap = "N/A" 
+
+            try:
+                free_from = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div'))).text 
+            except NoSuchElementException:
+                print("Exception: Free-From Not Found")
+                free_from = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Free-From")
+                free_from = "N/A" 
+
+            try:
+                ingredients = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]'))).text
+            except NoSuchElementException:
+                print("Exception: Ingredients Not Found")
+                ingredients = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Ingredients")
+                ingredients = "N/A"
+            
+            try:
+                directions = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol'))).text
+            except NoSuchElementException:
+                print("Exception: Directions Not Found")
+                directions = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Directions")
+                directions = "N/A"
+
+            try:
+                notes = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li'))).text
+            except NoSuchElementException:
+                print("Exception: Notes Not Found")
+                notes = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Notes")
+                notes = "N/A"
+            
+            try:
+                storage = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li'))).text
+            except NoSuchElementException:
+                print("Exception: Storage Not Found")
+                storage = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Storage")
+                storage = "N/A"
+
+            try:
+                picture_main = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="main-image-container"]/img')))
+            except NoSuchElementException:
+                print("Exception: Main Image Not Found")
+                picture_main = "N/A"
+            except TimeoutException:
+                print("Exception: Timeout: Didnt Find Main Image")
+                picture_main = "N/A"
+
         except NoSuchElementException:
             print("Exception: One Or More Data Entry Not Found")
         except TimeoutException:
@@ -172,34 +312,32 @@ class scraper:
 
         image_container = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-video"]/div[2]'))) # Find the container
         image_list = image_container.find_elements(By.XPATH, 'img') # Find the children
-        print(len(image_list))
-        image_links= []
 
         for i in image_list:
             link = i.get_attribute('src')
-            image_links.append(link)
+            data.image_links.append(link)
         
-        self.recipe_details = {'ID': [], 'Name': [], 'Photo': [],'Tags': [], 'Description': [], 'Total Time': [], 'Prep Time': [], 'Cook Time': [], 'Allergens': [], 'Swaps': [], 'Free From': [], 'Ingredients': [], 'Directions': [], 'Notes': [], 'Storage': [], 'Images': []}
-        self.recipe_details['ID'].append(self.getUniqueID(self, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213'))
-        self.recipe_details['Name'].append(name)
-        self.recipe_details['Photo'].append(picture_main)
-        self.recipe_details['Tags'].append(tag)
-        self.recipe_details['Description'].append(description)
-        self.recipe_details['Total Time'].append(time_total)
-        self.recipe_details['Prep Time'].append(time_prep)
-        self.recipe_details['Cook Time'].append(time_cook)
-        self.recipe_details['Allergens'].append(allergens)
-        self.recipe_details['Swaps'].append(swap)
-        self.recipe_details['Free From'].append(free_from)
-        self.recipe_details['Ingredients'].append(ingredients)
-        self.recipe_details['Directions'].append(directions)
-        self.recipe_details['Notes'].append(notes)
-        self.recipe_details['Storage'].append(storage)
-        self.recipe_details['Images'].append(image_links)
+        data.recipe_details = {'ID': [], 'Name': [], 'Photo': [],'Tags': [], 'Description': [], 'Total Time': [], 'Prep Time': [], 'Cook Time': [], 'Allergens': [], 'Swaps': [], 'Free From': [], 'Ingredients': [], 'Directions': [], 'Notes': [], 'Storage': [], 'Images': []}
+        data.recipe_details['ID'].append(self.getUniqueID(self, url))
+        data.recipe_details['Name'].append(name)
+        data.recipe_details['Photo'].append(picture_main)
+        data.recipe_details['Tags'].append(tag)
+        data.recipe_details['Description'].append(description)
+        data.recipe_details['Total Time'].append(time_total)
+        data.recipe_details['Prep Time'].append(time_prep)
+        data.recipe_details['Cook Time'].append(time_cook)
+        data.recipe_details['Allergens'].append(allergens)
+        data.recipe_details['Swaps'].append(swap)
+        data.recipe_details['Free From'].append(free_from)
+        data.recipe_details['Ingredients'].append(ingredients)
+        data.recipe_details['Directions'].append(directions)
+        data.recipe_details['Notes'].append(notes)
+        data.recipe_details['Storage'].append(storage)
+        data.recipe_details['Images'].append(data.image_links)
+        print(data.image_links)
 
         self.jsonFile(self)
 
-    '''This function creates a folder for all the data then creates a json file and writes the data dictionary to it'''
     def jsonFile(self):
         '''Creates a folder called 'raw_data' in the path for the json file to be saved in
         Uses a try except catch as it will throw an error if the folder already exists'''
@@ -222,8 +360,8 @@ class scraper:
         '''Stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
         The dicrionary is converted to a string using str() to deal with 'TypeError: Object of type WebElement is not JSON serializable'''
         with open(os.path.join('raw_data', 'data.json'), 'w') as json_file:
-            json.dump(str(self.recipe_details), json_file)
-
+            json.dump(str(data.recipe_details), json_file)
+    
     def downloadImage(url, recipeName):
         '''Creates a folder called 'images' in the path for the image files to be saved in
         Uses a try except catch as it will throw an error if the folder already exists
@@ -251,15 +389,15 @@ class scraper:
         except:
             print("Error Downloading Image")           
 
-    def getImages(self, url):
+    def makeImageFilename(self, url):
         '''Retrieves the ID of each image using 'getRecipeDetails()
         Removes all unecissary elements from the ID string to create a file name
         Pass the file name to 'downloadImages() to create a file'''
 
-        self.getRecipeDetails(self)
-        for i in self.recipe_details['Images']:
+        self.getRecipeDetails(self, url)
+        for i in data.recipe_details['Images']:
             for j in i:
-                IDtoName = str(self.recipe_details['ID']).split()
+                IDtoName = str(data.recipe_details['ID']).split()
                 IDtoName1 = str(IDtoName[0]).replace("(", "")
                 IDtoName2 = str(IDtoName1).replace("[", "")
                 IDtoName3 = str(IDtoName2).replace(",", "")
@@ -271,35 +409,4 @@ scraper.getImages(scraper, 'https://www.pickuplimes.com/recipe/harissa-spiced-be
 
 scraper.closeSession()
 
-#    def __init__(self, url, options=None):
-#        self.url = url
-#
-#        if options:
-#            self.driver = chrome(ChromeDriverManager().install(), options=options)
-#            else:
-#            self.driver = chrome(ChromeDriverManager().install())
-#
-#        self.driver.get(self.url)
-#    
-#    def accept_cookies(self, xpath, iframe=None):
-#        try: # Incase there isnt a cookie button
-#            time.sleep(10) # So the website can catch up to the bot
-#
-#            # If there is an iframe, remove it
-#            if iframe: # iframe is the frame sometimes covering the 'Accept Cookies' button
-#                self.driver.switch_to.frame(iframe)
 
-#            cookies_button = self.driver.find_element(By.XPATH, xpath)
-#            cookies_button.click()
-#            time.sleep(5)
-#        except:
-#            print('No Cookie Button')
-
-#    def click_search_bar(self, xpath):
-#        search_bar = self.driver.find_element(By.XPATH, xpath)
-#        search_bar.click()
-#        return search_bar
-
-#    def write_in_search_bar(self, text: str, xpath: str) -> None:
-#        search_bar = self.click_search_bar(xpath)
-#        search_bar.send_keys(text)
