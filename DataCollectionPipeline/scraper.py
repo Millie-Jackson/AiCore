@@ -24,6 +24,7 @@ driver = webdriver.Chrome()
 
 class data:
     articles = []
+    count = 0
     currentURL = ""
     image_links = []
     pages = []
@@ -31,36 +32,20 @@ class data:
     recipeLinks = []
 
 class scraper:
-    def intitialize(self, url, search_term, delay):
-        global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
-        
-        self.getURL(url)
-        #self.getTitle()
-        #self.acceptCookies()
-        #self.getAllRecipePages(self) # Could be private?
-        #self.getSourceCode()
-        #self.search(search_term)
-        #time.sleep(3)
-        #self.home()
-        #self.findRecipeList() # Could be private?
-        #self.getRecipes(self, 'https://www.pickuplimes.com/recipe/?page=5')
-        #self.getPageURL()
-        #self.getUniqueID()
-        #self.getRecipeDetails(self)
-        #self.jsonFile() # Could be private?
-        #self.downloadImage('/html/body/img', 'nameForImage') # Could be private?
-        #self.getRecipeDetails(self)
-        self.run(self)
-
+    def intitialize(self, url, search_term):
+        #global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
+        data.currentURL = url
+        self.getURL(data.currentURL)
+        self.run()
         self.closeSession()
 
     def run(self):
-        data.currentURL = self.findRecipeList(self)
-        self.getAllRecipePages(self, data.currentURL)
-        self.getRecipes(self, data.currentURL)
+        data.currentURL = self.findRecipeList()
+        self.getAllRecipePages(data.currentURL)
+        self.getRecipes(data.currentURL)
         for i in data.recipeLinks:
             data.currentURL = i
-            self.makeImageFilename(self, data.currentURL)
+            self.makeImage(self, data.currentURL)
 
     def getURL(url):
         '''Navigates to a website using a url passed as a perameter.'''
@@ -115,8 +100,6 @@ class scraper:
             print("Exception: Recipe List Not Found")
         except TimeoutException:
             print("Exception: Timeout: Recipe List")
-
-        return self.getPageURL()
 
     def acceptCookies():
         '''Finds the accept cookies button and clicks it.'''
@@ -363,10 +346,10 @@ class scraper:
             json.dump(str(data.recipe_details), json_file)
     
     def downloadImage(url, recipeName):
-        '''Creates a folder called 'images' in the path for the image files to be saved in
-        Uses a try except catch as it will throw an error if the folder already exists
+        '''Creates a folder called 'images' and another with the recipe name in the path for the image files to be saved in
+        Uses a try except catch as it will throw an error if the folders already exists
         Adds User-Agent Headers to bypass 403 error
-        Downloads an image into the images folder'''
+        Downloads the images into the folder of that recipe name'''
         try:
             directory = "images"
             parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline"
@@ -375,6 +358,15 @@ class scraper:
             print("Directory '% s' created" % directory)
         except:
             print("Root Folder 'images' Already Exists")
+
+        #try:
+        #    recipeDirectory = recipeName.replace(".jpg", "").replace("0", "").replace("1", "").replace("2", "").replace("3", "").replace("4", "").replace("5", "").replace("6", "").replace("7", "").replace("8", "").replace("9", "")
+        #    parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images"
+        #    path = os.path.join(parent_dir, recipeDirectory)
+        #    os.mkdir(path)
+        #    print("Directory '% s' created" % recipeDirectory)
+        #except:
+        #    print("Root Folder", recipeDirectory,  "Already Exists")
         
         try:
             # Adds headers to resolve 403 Fobidden Error
@@ -382,18 +374,19 @@ class scraper:
             opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
             urllib.request.install_opener(opener)
 
+            #directory = "images/" + directory + "/"
             directory = "images/"
             fileType = '.jpg'
+            #data.fileName = directory + recipeName + str(data.count) + fileType
             fileName = directory + recipeName + fileType
             image = urllib.request.urlretrieve(url, fileName)
         except:
-            print("Error Downloading Image")           
+            print("Error Downloading Images")         
 
-    def makeImageFilename(self, url):
+    def makeImage(self, url):
         '''Retrieves the ID of each image using 'getRecipeDetails()
         Removes all unecissary elements from the ID string to create a file name
         Pass the file name to 'downloadImages() to create a file'''
-
         self.getRecipeDetails(self, url)
         for i in data.recipe_details['Images']:
             for j in i:
@@ -403,10 +396,9 @@ class scraper:
                 IDtoName3 = str(IDtoName2).replace(",", "")
                 IDtoName4 = str(IDtoName3).replace("'", "")
 
-                self.downloadImage(j, IDtoName4)
+                self.downloadImage(j, IDtoName4 + str(data.count) + ".jpg")
+                data.count = data.count + 1
 
-scraper.getImages(scraper, 'https://www.pickuplimes.com/recipe/harissa-spiced-beans-898')
-
-scraper.closeSession()
+#scraper.closeSession()
 
 
