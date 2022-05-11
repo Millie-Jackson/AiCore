@@ -359,14 +359,14 @@ class scraper:
         except:
             print("Root Folder 'images' Already Exists")
 
-        #try:
-        #    recipeDirectory = recipeName.replace(".jpg", "").replace("0", "").replace("1", "").replace("2", "").replace("3", "").replace("4", "").replace("5", "").replace("6", "").replace("7", "").replace("8", "").replace("9", "")
-        #    parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images"
-        #    path = os.path.join(parent_dir, recipeDirectory)
-        #    os.mkdir(path)
-        #    print("Directory '% s' created" % recipeDirectory)
-        #except:
-        #    print("Root Folder", recipeDirectory,  "Already Exists")
+        try:
+            recipeDirectory = recipeName.replace(".jpg", "").replace("0", "").replace("1", "").replace("2", "").replace("3", "").replace("4", "").replace("5", "").replace("6", "").replace("7", "").replace("8", "").replace("9", "")
+            parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images"
+            path = os.path.join(parent_dir, recipeDirectory)
+            os.mkdir(path)
+            print("Directory '% s' created" % recipeDirectory)
+        except:
+            print("Root Folder", recipeDirectory,  "Already Exists")
         
         try:
             # Adds headers to resolve 403 Fobidden Error
@@ -374,14 +374,12 @@ class scraper:
             opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
             urllib.request.install_opener(opener)
 
-            #directory = "images/" + directory + "/"
-            directory = "images/"
+            downloadDirectory = "images/" + recipeDirectory + "/"
             fileType = '.jpg'
-            #data.fileName = directory + recipeName + str(data.count) + fileType
-            fileName = directory + recipeName + fileType
+            fileName = downloadDirectory + recipeName + fileType
             image = urllib.request.urlretrieve(url, fileName)
         except:
-            print("Error Downloading Images")         
+            print("Error Downloading Images")          
 
     def makeImage(self, url):
         '''Retrieves the ID of each image using 'getRecipeDetails()
@@ -396,8 +394,9 @@ class scraper:
                 IDtoName3 = str(IDtoName2).replace(",", "")
                 IDtoName4 = str(IDtoName3).replace("'", "")
 
-                self.downloadImage(j, IDtoName4 + str(data.count) + ".jpg")
-                data.count = data.count + 1
+                recipeName = IDtoName4 + "-" + str(data.count) + ".jpg"
+                self.downloadImage(j, recipeName)
+                data.count = data.count + 1  
 
 #scraper.closeSession()
 
