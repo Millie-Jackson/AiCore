@@ -40,12 +40,14 @@ class scraper:
         self.closeSession()
 
     def run(self):
-        data.currentURL = self.findRecipeList()
-        self.getAllRecipePages(data.currentURL)
-        self.getRecipes(data.currentURL)
+        self.acceptCookies()
+        data.currentURL = self.findRecipeList(self)
+        self.getAllRecipePages(self, data.currentURL)
+        self.getRecipes(self, data.currentURL)
         for i in data.recipeLinks:
             data.currentURL = i
             self.makeImage(self, data.currentURL)
+        self.closeSession()
 
     def getURL(url):
         '''Navigates to a website using a url passed as a perameter.'''
