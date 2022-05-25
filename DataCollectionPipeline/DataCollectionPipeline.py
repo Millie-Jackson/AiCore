@@ -1,8 +1,5 @@
-#import numpy as np
-
 from scraper import scraper
-from decorators import noSuchElementException
-#import scraper
+
 import time
 
 bot = scraper()

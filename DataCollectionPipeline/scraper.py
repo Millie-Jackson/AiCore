@@ -10,8 +10,6 @@ from uuid import UUID # used to create a unique id for each recipe
 from json import JSONEncoder # used to convert the UUID into a writable format
 from urllib.request import Request, urlopen
 
-#from decorators import noSuchElementException
-
 from selenium import webdriver
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
@@ -63,7 +61,7 @@ class data:
     timeTotal = "" # Used to store scraped total time it takes to make the recipe
 
 class scraper:
-    def intitialize(self, url, searchTerm, delay):
+    def intitialize(self, url, searchTerm):
         global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
     
         self.getURL(url) # Have to start somewhere
