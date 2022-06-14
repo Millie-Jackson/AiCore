@@ -1,7 +1,22 @@
 import unittest
-import scraper
+from scraper import scraper
 
 class scraperTestCase(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls): # Runs at the begining of the file
+        pass
+
+    @classmethod
+    def tearDownClass(cls): # Runs at the end of the file
+        pass
+
+    def setUp(self): # Runs before every test
+        print("setUp")
+        self.bot1 = scraper()
+
+    def tearDown(self): # Runs at the end of every test
+        print("tearDown\n")
     
     def test_dataClass(self):
         pass
