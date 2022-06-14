@@ -1,3 +1,4 @@
+import requests # for testing website response
 import unittest
 from scraper import scraper
 
@@ -31,7 +32,15 @@ class scraperTestCase(unittest.TestCase):
         pass
 
     def test_getURL(self):
-        pass
+        print("test_getURL")
+        response = requests.get('https://www.pickuplimes.com/')
+
+        if response.ok:
+            print("Website Found")
+            return response.text
+        else:
+            print("!Website Not Found!")
+            return 'Bad Response'
 
     def test_getTitle(self):
         pass
