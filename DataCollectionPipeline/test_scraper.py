@@ -1,8 +1,13 @@
+import os # for testing directories
 import requests # for testing website response
 import unittest
+import uuid # for testing the recipe unique identifyer
 from scraper import scraper
 
 class scraperTestCase(unittest.TestCase):
+
+    recipe = 'harissa-spiced-beans-898-0.jpg'
+    directory = 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images'
 
     @classmethod
     def setUpClass(cls): # Runs at the begining of the file
@@ -13,11 +18,15 @@ class scraperTestCase(unittest.TestCase):
         pass
 
     def setUp(self): # Runs before every test
-        print("setUp")
-        self.bot1 = scraper()
+        self.bot1 = scraper() 
+        self.friendlyID = 'harissa-spiced-beans-898'
+        self.systemID = uuid.uuid4()
+        self.dictionary = {"ID": []}
+        self.number = str(3)
 
     def tearDown(self): # Runs at the end of every test
-        print("tearDown\n")
+        #print("tearDown\n")
+        pass
     
     def test_dataClass(self):
         pass
@@ -163,10 +172,33 @@ class scraperTestCase(unittest.TestCase):
         pass
 
     def test_makeRecipeFolder(self):
-        pass
+        print('test_makeRecipeFolder')
+
+        self.assertEqual(self.recipe.replace(".jpg", "").replace("0", ""), 'harissa-spiced-beans-898-')
+        self.assertEqual(self.directory, 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images')
+        self.assertEqual(os.path.join(self.directory, self.recipe), 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images\harissa-spiced-beans-898-0.jpg')
 
     def test_makeImage(self):
-        pass
+        print("test_makeImage")
+
+        self.dictionary['ID'].append(self.friendlyID)
+        self.dictionary['ID'].append(self.systemID)
+
+        # Check the dictionary contains the correct IDs
+        self.assertEqual(self.dictionary['ID'][0], self.friendlyID)
+        self.assertAlmostEqual(self.dictionary['ID'][1], self.systemID)
+
+        # Check it removes all unnecessary bits from the string
+        editedID = (self.dictionary['ID'][0])
+        editedID = editedID.title()
+        editedID = editedID.replace("-", " ")
+        for i in editedID:
+            if i.isdigit():
+                editedID = editedID.replace(i , "")
+
+        # Check the finished string is correct
+        name = editedID + self.number + ".jpg"
+        self.assertEqual(name, editedID + self.number + ".jpg") 
 
 unittest.main(argv=['first-arg-is-ignored'], exit=False)
 
