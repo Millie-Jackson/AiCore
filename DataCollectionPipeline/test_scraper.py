@@ -23,7 +23,11 @@ class scraperTestCase(unittest.TestCase):
         self.systemID = uuid.uuid4()
         self.dictionary = {"ID": []}
         self.number = str(3)
+        self.recipeName = 'Harissa Spiced Beans'
+
         self.folderName = 'images'
+        self.imagePath = os.path.join(self.directory, self.folderName)
+        self.recipePath = os.path.join(self.directory, self.folderName)
 
     def tearDown(self): # Runs at the end of every test
         #print("tearDown\n")
@@ -167,15 +171,19 @@ class scraperTestCase(unittest.TestCase):
         pass
 
     def test_downloadImage(self):
-        pass
+        print('test_downloadImage')
+
+        # Check directory path
+        self.assertEqual(self.recipePath, 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline\images')
+
+        # Check image name
+        self.assertEqual(self.recipeName, 'Harissa Spiced Beans') 
+        # Check image was downloaded
 
     def test_makeImagesFolder(self):
-         print('test_makeImagesFolder')       
-
+        print('test_makeImagesFolder')
         # Check directory is correct
-        imagePath = os.path.join(self.directory, self.folderName)
-        self.assertEqual(imagePath, 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline\images') 
-
+        self.assertEqual(self.imagePath, 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline\images')
         # Check folder was created
 
     def test_makeRecipeFolder(self):
