@@ -7,7 +7,7 @@ from scraper import scraper
 class scraperTestCase(unittest.TestCase):
 
     recipe = 'harissa-spiced-beans-898-0.jpg'
-    directory = 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images'
+    directory = 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline'
 
     @classmethod
     def setUpClass(cls): # Runs at the begining of the file
@@ -28,6 +28,7 @@ class scraperTestCase(unittest.TestCase):
         self.folderName = 'images'
         self.imagePath = os.path.join(self.directory, self.folderName)
         self.recipePath = os.path.join(self.directory, self.folderName)
+        #self.handle = open("data.json", "r") # Dont forget to test the json file
 
     def tearDown(self): # Runs at the end of every test
         #print("tearDown\n")
@@ -170,6 +171,7 @@ class scraperTestCase(unittest.TestCase):
     def jsonDump(self):
         pass
 
+    # UNFINISHED
     def test_downloadImage(self):
         print('test_downloadImage')
 
@@ -178,20 +180,25 @@ class scraperTestCase(unittest.TestCase):
 
         # Check image name
         self.assertEqual(self.recipeName, 'Harissa Spiced Beans') 
+
         # Check image was downloaded
 
+    # UNFINISHED
     def test_makeImagesFolder(self):
-        print('test_makeImagesFolder')
+        print('test_makeImagesFolder')       
+
         # Check directory is correct
-        self.assertEqual(self.imagePath, 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline\images')
+        self.assertEqual(self.imagePath, 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline\images') 
+
         # Check folder was created
 
+    # PSEUDO
     def test_makeRecipeFolder(self):
         print('test_makeRecipeFolder')
 
         self.assertEqual(self.recipe.replace(".jpg", "").replace("0", ""), 'harissa-spiced-beans-898-')
-        self.assertEqual(self.directory, 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images')
-        self.assertEqual(os.path.join(self.directory, self.recipe), 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images\harissa-spiced-beans-898-0.jpg')
+        self.assertEqual(self.recipePath, 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline\images')
+        self.assertEqual(os.path.join(self.recipePath, self.recipe), 'C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline\images\harissa-spiced-beans-898-0.jpg')
 
     def test_makeImage(self):
         print("test_makeImage")

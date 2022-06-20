@@ -30,11 +30,8 @@ class data:
     articles = [] # Used to make a list of recipes
     button = None # Used to interact with various button elements
     container = None # Used to store various container elements
-    count = 0 # Used in the creation of image filenames
     currentURL = "" # Used to store various urls 
     pages = [] # Used to append a list with pages links
-    recipeDetails = {} # Used to store all the scraped recipe details
-    recipeDirectory = "" # Used to create modified folder names
     recipeLinks = [] # Used to store recipe links
     recipeName = "" # Stores the recipe name
     searchbar = None # Used to interact with search bar
@@ -43,7 +40,15 @@ class data:
     title = "" # Used to get the title
     totalPages = [] # Stores a list of pages
 
+    # File Management
+    count = 0 # Used in the creation of image filenames
+    dataDirectory = "" # Used to create folder
+    imageDirectory = "" # Used to create folder 
+    recipeDirectory = "" # Used to create modified folder names
+
     # Scraped Information
+    recipeDetails = {} # Used to store all the scraped recipe details
+
     allergens = "" # Used to store scraped allergens
     alternatives = "" #Used to store scraped alternatives
     description = "" # Used to store the scraped description of the recipe
@@ -64,9 +69,10 @@ class scraper:
     def intitialize(self, url, searchTerm):
         global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
     
-        self.getURL(url) # Have to start somewhere
+        self.getURL(self, url) # Have to start somewhere
         self.run(self)
         self.closeSession() # Have to end somewhere
+        
     
     # DECORATORS
 
@@ -96,7 +102,7 @@ class scraper:
             data.currentURL = i
             self.makeImage(self, data.currentURL)
 
-    def getURL(url):
+    def getURL(self, url):
         '''Navigates to a website using a url passed as a perameter.'''
         driver.get(url) 
 
@@ -470,13 +476,17 @@ class scraper:
         self.getRecipeDetails(self, url)
         
         for i in data.recipeDetails['Images']:
-            for j in i:
-                IDtoName = str(data.recipeDetails['ID']).split()
-                IDtoName1 = str(IDtoName[0]).replace("(", "")
-                IDtoName2 = str(IDtoName1).replace("[", "")
-                IDtoName3 = str(IDtoName2).replace(",", "")
-                IDtoName4 = str(IDtoName3).replace("'", "")
 
-                data.recipeName = IDtoName4 + "-" + str(data.count) + ".jpg"
-                self.downloadImage(self, j, data.recipeName)
-                data.count = data.count + 1                
+            for j in i:
+                IDtoName = data.recipeDetails['ID'][0]
+                IDtoName = IDtoName[0].replace("-", " ")
+                IDtoName = IDtoName.title()
+
+                for i in IDtoName:
+                    if i.isdigit():
+                        IDtoName = IDtoName.replace(i, "")
+
+        s = str(data.count)
+        data.recipeName = IDtoName + s + ".jpg"
+        self.downloadImage(self, j, data.recipeName)
+        data.count = data.count + 1                
