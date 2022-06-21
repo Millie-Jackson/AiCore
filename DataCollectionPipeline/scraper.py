@@ -89,7 +89,7 @@ class scraper:
         return wrapper
 
 
-    def run(self):
+    def run(self) -> None:
         #self.acceptCookies()
         data.currentURL = self.findRecipeList(self)
         self.getAllRecipePages(self, data.currentURL)
@@ -97,36 +97,36 @@ class scraper:
         self.cycleRecipeLinks(self)
         self.closeSession()   
 
-    def cycleRecipeLinks(self):
+    def cycleRecipeLinks(self) -> None:
         for i in data.recipeLinks:
             data.currentURL = i
             self.makeImage(self, data.currentURL)
 
-    def getURL(self, url):
+    def getURL(self, url) -> None:
         '''Navigates to a website using a url passed as a perameter.'''
         driver.get(url) 
 
-    def getTitle():
+    def getTitle() -> None:
         '''Fetches the title and prints it to screen.'''
         data.title = driver.title
 
-    def closeSession():
+    def closeSession() -> None:
         '''Closes the driver'''
         driver.quit()
 
-    def getSourceCode():
+    def getSourceCode() -> None:
         '''Fetches source code for the page.'''
         data.source = driver.page_source
 
     @exceptionHandling
-    def search(self, searchTerm):
+    def search(self, searchTerm) -> None:
         '''Finds search bar, types in the search term which it takes as a perameter and clicks to navigate to the next page.'''
         button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'nav-searchbar-btn')))
         button.click()
 
         self.findSearchbar(self, searchTerm)
 
-    def searchbarTextAndClick(searchTerm):
+    def searchbarTextAndClick(searchTerm) -> None:
         try:
             data.searchbar.send_keys(searchTerm)
             data.searchbar.send_keys(Keys.RETURN) # Return = Enter
@@ -134,13 +134,13 @@ class scraper:
             print("Exception: No search term input")
     
     @exceptionHandling
-    def findSearchbar(self, searchTerm):
+    def findSearchbar(self, searchTerm) -> None:
 
         data.searchbar = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.NAME, "sb")))
         self.searchbarTextAndClick(searchTerm)
 
     @exceptionHandling
-    def home():
+    def home() -> None:
         '''Finds the title and clicks it.'''
         title = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'nav-image')))
         title.click()
@@ -152,51 +152,51 @@ class scraper:
         data.button.click()
 
     @exceptionHandling
-    def acceptCookies():
+    def acceptCookies() -> None:
         '''Finds the accept cookies button and clicks it.'''
         data.button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[2]')))
         data.button.click()
     
-    def getRecipes(self, url):
+    def getRecipes(self, url) -> None:
         '''Finds the recipe container and puts all the recipes in a list.'''
 
         self.getRecipeContainer()
         self.makeRecipeList()
 
     @exceptionHandling
-    def getRecipeContainer():
+    def getRecipeContainer() -> None:
         data.container = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//*[@id='index-item-container']/div/div[2]/ul"))) 
 
-    def makeRecipeList():
+    def makeRecipeList() -> None:
         data.articles = data.container.find_elements(By.TAG_NAME, 'li')
 
         for i in data.articles:
             data.tag = i.find_element(By.TAG_NAME, 'a')
             data.recipeLinks.append(data.tag.get_attribute('href'))
 
-    def getPageURL():
+    def getPageURL() -> None:
         '''Returns the current page url.'''
         data.currentURL =  driver.current_url
 
-    def getAllRecipePages(self, url):
+    def getAllRecipePages(self, url) -> None:
         '''Navigates to each recipe page by modifying the current url and stores them in a list.'''
 
         self.getTotalPages()
         self.getSearchList()
 
     @exceptionHandling
-    def getTotalPages():
+    def getTotalPages() -> None:
          #totalPages = driver.find_element(By.CLASS_NAME, 'page-text') #actual
         data.totalPages = [1, 2, 3] #temp to shorten runtime
 
-    def getSearchList():
+    def getSearchList() -> None:
         for i in data.totalPages:
             data.currentURL = driver.current_url
             url_change = "?page=" + str(i)
             next_page = data.currentURL + url_change
             data.pages.append(next_page)
 
-    def getUniqueID(self, url):
+    def getUniqueID(self, url) -> None:
         '''Creates a uuid for each recipe taking a url as a perameter'''
         
         page_ID = url
@@ -204,7 +204,7 @@ class scraper:
 
         ids = (just_ID, uuid.uuid4())
 
-    def scrapeName():
+    def scrapeName() -> None:
         try:    
             data.name = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/h1'))).text
         except NoSuchElementException:
@@ -214,7 +214,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Name")
             data.name = "N/A" 
 
-    def scrapeTags():
+    def scrapeTags() -> None:
         try:
             data.recipeTags = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH,'//*[@id="header-info-col"]/div/header/a[1]/div/p'))).text
         except NoSuchElementException:
@@ -224,7 +224,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Tag")
             data.recipeTags = "N/A"
 
-    def scrapeDescription():
+    def scrapeDescription() -> None:
         try:
             data.description = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="header-info-col"]/div/header/span'))).text
         except NoSuchElementException:
@@ -234,7 +234,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Description")
             data.description = "N/A"
 
-    def scrapeTotalTime():
+    def scrapeTotalTime() -> None:
         try:
             data.timeTotal = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[2]'))).text  
         except NoSuchElementException:
@@ -244,7 +244,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Total-Time")
             data.timeTotal = "N/A"
 
-    def scrapePrepTime():
+    def scrapePrepTime() -> None:
         try:
             data.timePrep = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[3]'))).text
         except NoSuchElementException:
@@ -254,7 +254,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Prep-Time")
             data.timePrep = "N/A"
 
-    def scrapeCookTime():
+    def scrapeCookTime() -> None:
         try:
             data.timeCook = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-info-container"]/div[4]'))).text
         except NoSuchElementException:
@@ -264,7 +264,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Cook-Time")
             data.timeCook = "N/A" 
 
-    def scrapeAllergens():
+    def scrapeAllergens() -> None:
         try:
             data.allergens = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[1]/div'))).text 
         except NoSuchElementException:
@@ -274,7 +274,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Allergens")
             data.allergens = "N/A"
 
-    def scrapeAlternatives():
+    def scrapeAlternatives() -> None:
         try: 
             data.alternatives = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[2]/div'))).text
         except NoSuchElementException:
@@ -284,7 +284,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Swap")
             data.alternatives = "N/A"
 
-    def scrapeFreeFrom():
+    def scrapeFreeFrom() -> None:
         try:
             data.freeFrom = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="allergen-info-container"]/div[3]/div'))).text 
         except NoSuchElementException:
@@ -294,7 +294,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Free-From")
             data.freeFrom = "N/A" 
 
-    def scrapeIngredients():
+    def scrapeIngredients() -> None:
         try:
             data.ingredients = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[2]'))).text
         except NoSuchElementException:
@@ -304,7 +304,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Ingredients")
             data.ingredients = "N/A"
 
-    def scrapeInstructions():
+    def scrapeInstructions() -> None:
         try:
             data.instructions = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ol'))).text
         except NoSuchElementException:
@@ -314,7 +314,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Directions")
             data.instructions = "N/A"
 
-    def scrapeNotes():
+    def scrapeNotes() -> None:
         try:
             data.notes = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[1]/li'))).text
         except NoSuchElementException:
@@ -324,7 +324,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Notes")
             data.notes = "N/A"
 
-    def scrapeStorage():
+    def scrapeStorage() -> None:
         try:
             data.storage = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="ingredient-direction-container"]/div/div[4]/section/ul[2]/li'))).text
         except NoSuchElementException:
@@ -334,7 +334,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Storage")
             data.storage = "N/A"
 
-    def scrapeMainPhoto():
+    def scrapeMainPhoto() -> None:
         try:
             data.mainPhoto = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="main-image-container"]/img')))
         except NoSuchElementException:
@@ -345,7 +345,7 @@ class scraper:
             data.mainPhoto = "N/A"
 
     @exceptionHandling
-    def scrapeImages():
+    def scrapeImages() -> None:
         imageContainer = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-video"]/div[2]'))) # Find the container
         imageList = imageContainer.find_elements(By.XPATH, 'img') # Find the children
 
@@ -354,7 +354,7 @@ class scraper:
             data.imageLinks.append(link)
 
     @exceptionHandling
-    def getRecipeDetails(self, url):
+    def getRecipeDetails(self, url) -> None:
         self.getURL(url)
 
         self.scrapeName()  
@@ -376,7 +376,7 @@ class scraper:
         self.storeDetails(self, url)
         self.jsonFile(self)
 
-    def storeDetails(self, url):
+    def storeDetails(self, url) -> None:
         data.recipeDetails = {'ID': [], 'Name': [], 'Photo': [],'Tags': [], 'Description': [], 'Total Time': [], 'Prep Time': [], 'Cook Time': [], 'Allergens': [], 'Swaps': [], 'Free From': [], 'Ingredients': [], 'Directions': [], 'Notes': [], 'Storage': [], 'Images': []}
         data.recipeDetails['ID'].append(self.getUniqueID(self, url))
         data.recipeDetails['Name'].append(data.name)
@@ -395,7 +395,7 @@ class scraper:
         data.recipeDetails['Storage'].append(data.storage)
         data.recipeDetails['Images'].append(data.imageLinks)
 
-    def jsonFile(self):
+    def jsonFile(self) -> None:
         '''Creates a folder called 'raw_data' in the path for the json file to be saved in
         Uses a try except catch as it will throw an error if the folder already exists'''
 
@@ -410,7 +410,7 @@ class scraper:
 
         self.jsonDump()
 
-    def makeRaw_DataFolder():
+    def makeRaw_DataFolder() -> None:
         try:
             directory = "raw_data"
             parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline"
@@ -420,13 +420,13 @@ class scraper:
         except:
             print("Folder already exists: raw_data")
     
-    def jsonDump():
+    def jsonDump() -> None:
         '''Stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
         The dicrionary is converted to a string using str() to deal with 'TypeError: Object of type WebElement is not JSON serializable'''
         with open(os.path.join('raw_data', 'data.json'), 'w') as json_file:
             json.dump(str(data.recipeDetails), json_file)
 
-    def downloadImage(self, url, recipeName):
+    def downloadImage(self, url, recipeName) -> None:
         '''Creates a folder called 'images' and another with the recipe name in the path for the image files to be saved in
         Uses a try except catch as it will throw an error if the folders already exists
         Adds User-Agent Headers to bypass 403 error
@@ -448,7 +448,7 @@ class scraper:
         except:
             print("Error Downloading Images")           
 
-    def makeImagesFolder():
+    def makeImagesFolder() -> None:
         try:
             directory = "images"
             parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline"
@@ -458,9 +458,10 @@ class scraper:
         except:
             print("Folder already exists: images")
 
-    def makeRecipeFolder():
+    def makeRecipeFolder() -> None:
         try:
             data.recipeDirectory = data.recipeName.replace(".jpg", "").replace("0", "").replace("1", "").replace("2", "").replace("3", "").replace("4", "").replace("5", "").replace("6", "").replace("7", "").replace("8", "").replace("9", "")
+            print("Recipe Name:" + data.recipeName)
             parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/images"
             path = os.path.join(parent_dir, data.recipeDirectory)
             os.mkdir(path)
@@ -468,7 +469,7 @@ class scraper:
         except:
             print("Folder already exists:", data.recipeDirectory)
 
-    def makeImage(self, url):
+    def makeImage(self, url) -> None:
         '''Retrieves the ID of each image using 'getRecipeDetails()
         Removes all unecissary elements from the ID string to create a file name
         Pass the file name to 'downloadImages() to create a file'''
