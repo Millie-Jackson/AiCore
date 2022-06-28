@@ -3,7 +3,7 @@ A webscraper that runs off the recipe website 'Pick Up Limes'. The goal is scrap
 
 It would be ideal if the model could take in a list of ingrediants (and kitchen tools) available in an individuals home and make suggestions on what meals could be made using whats currently available. Profiles could than be used within a app using common profile, diatry and lifestyle options
 
-WEBSITES
+WEBSITESdata.recipeName
 pickuplimes.com 
     - author is a dietician and influencer
     - recipes are designed to be simple and maximise nutrition
