@@ -50,13 +50,16 @@ Navigation:
     - Extra: finds the title and uses it to navigate back to the home screen
     - Extra: finds the search bar and uses a search term passed as an arguments to navigate to specific recipes
     - Extra: closes or quits using a method instead of the driver
+    
+![image](https://user-images.githubusercontent.com/100158073/176403275-aad68204-517e-400d-9178-6c243b64b538.png)
+
 Specific: 
     - finds cookie button and clicks it to remove (there is no iframe on this website), uses a try statement to catch exceptions incase there is no cookie button
     - creates a unique user friends ID based on the page url for catagorising and debugging
     - creates a UUID for each recipe
 Scraping:
     - gets the url (when navigating to a specific page or storing recipe pages for later use)
-    - finds the first page of recipes, returnes the url and modifies it in order to predict the next page url. Each url is then stored in a list which displays its size. Currently capped at 5 for performance reasons. It cant detect how many total pages there are on a site yet
+    - finds the first page of recipes, returnes the url and modifies it in order to predict the next page url. Each url is then stored in a list which displays its         size. Currently capped at 5 for performance reasons. It cant detect how many total pages there are on a site yet
     - retrieves text and image data froma recipe page using XPaths
     - writes all scrapped details to a JSON file (text and image links)
     - downloads images into recipe specific files
@@ -74,6 +77,8 @@ User Friendly ID
 UUID
 - Creates a system id using UUID, a 124 bit lable, use is standard in the industry
 
+![image](https://user-images.githubusercontent.com/100158073/176398340-3cac3d35-93cc-4b09-9259-052366b6418f.png)
+
 Scrapes Recipe Details
 - Finds the element and downloads the text using .text
 - Finds the image container and stores the link for each image in a list
@@ -86,6 +91,8 @@ JSON File
 - Handels error 'TypeError: Object of type UUID is not JSON serializable' by encoding the UUID by changing the type of the UUID
 - Writes the recipe details dictionary to a JSON files
 - Handels error 'TypeError: Object of type WebElement is not JSON serializable' by converting the dictionary to a string
+
+![image](https://user-images.githubusercontent.com/100158073/176403675-92975bd7-cc35-4470-8951-69ae9b85f399.png)
 
 Downloads Images
 - Create a directory with error handling incase the folder already exists
