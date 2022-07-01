@@ -15,7 +15,7 @@ The contents for both sites where chosen because they compliment each other, ran
 
 ![image](https://user-images.githubusercontent.com/100158073/176406808-57829b3e-ff97-4e4b-8d1a-19aa395870c9.png)
 
-**TECHNOLOGY:**
+**TECHNOLOGY**
 Python:        
     -commonly used for web scraping and data crawling
 VSCode:
@@ -58,7 +58,6 @@ Navigation:
     - Extra: closes or quits using a method instead of the driver
     
 ![image](https://user-images.githubusercontent.com/100158073/176403275-aad68204-517e-400d-9178-6c243b64b538.png)
->>>>>>> ae29c086dd4de6f02752c3f6cf85922affb80129
 
 Specific: 
     - finds cookie button and clicks it to remove (there is no iframe on this website), uses a try statement to catch exceptions incase there is no cookie button
