@@ -1,9 +1,11 @@
 **DESCRIPTION**
+
 A webscraper that runs off the recipe website 'Pick Up Limes'. The goal is scraping and comparing recipies with similar names from more than one site in order to create a 'master' copy of common recipes detailing essential and optional ingrediants rather than having multiple varients of the same recipe. This website was used for its user friendly simplicity and decent amount of data to crawl. The topic is also relivant and useful to the industry as cooking is a part of everyday life and specifically veganism has become popular recently. This model would be valuable for those in the industry looking to reduce the psychological concept of decision fatuigue which is a well established issue in marketing/advertising/retail, and also for individual use who want to simplyfy their cooking/lifestyle.
 
 It would be ideal if the model could take in a list of ingrediants (and kitchen tools) available in an individuals home and make suggestions on what meals could be made using whats currently available. Profiles could than be used within a app using common profile, diatry and lifestyle options
 
 **WEBSITES**
+
 pickuplimes.com 
     - author is a dietician and influencer
     - recipes are designed to be simple and maximise nutrition
@@ -16,6 +18,7 @@ The contents for both sites where chosen because they compliment each other, ran
 ![image](https://user-images.githubusercontent.com/100158073/176406808-57829b3e-ff97-4e4b-8d1a-19aa395870c9.png)
 
 **TECHNOLOGY**
+
 Python:        
     -commonly used for web scraping and data crawling
 VSCode:
