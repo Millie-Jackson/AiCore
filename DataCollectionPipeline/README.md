@@ -1,9 +1,9 @@
-DESCRIPTION
+**DESCRIPTION**
 A webscraper that runs off the recipe website 'Pick Up Limes'. The goal is scraping and comparing recipies with similar names from more than one site in order to create a 'master' copy of common recipes detailing essential and optional ingrediants rather than having multiple varients of the same recipe. This website was used for its user friendly simplicity and decent amount of data to crawl. The topic is also relivant and useful to the industry as cooking is a part of everyday life and specifically veganism has become popular recently. This model would be valuable for those in the industry looking to reduce the psychological concept of decision fatuigue which is a well established issue in marketing/advertising/retail, and also for individual use who want to simplyfy their cooking/lifestyle.
 
 It would be ideal if the model could take in a list of ingrediants (and kitchen tools) available in an individuals home and make suggestions on what meals could be made using whats currently available. Profiles could than be used within a app using common profile, diatry and lifestyle options
 
-WEBSITES
+**WEBSITES**
 pickuplimes.com 
     - author is a dietician and influencer
     - recipes are designed to be simple and maximise nutrition
@@ -87,7 +87,6 @@ User Friendly ID:
 UUID:
 - Creates a system id using UUID, a 124 bit lable, use is standard in the industry
 
-<<<<<<< HEAD
 Scrapes Recipe Details:
 =======
 ![image](https://user-images.githubusercontent.com/100158073/176398340-3cac3d35-93cc-4b09-9259-052366b6418f.png)
@@ -106,7 +105,6 @@ JSON File:
 - Writes the recipe details dictionary to a JSON files
 - Handels error 'TypeError: Object of type WebElement is not JSON serializable' by converting the dictionary to a string
 
-<<<<<<< HEAD
 Downloads Images:
 =======
 ![image](https://user-images.githubusercontent.com/100158073/176403675-92975bd7-cc35-4470-8951-69ae9b85f399.png)
