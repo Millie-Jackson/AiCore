@@ -46,6 +46,7 @@ unittests:
     - can be used for both unit and integration testing
 
 **FEATURES:**
+
 Scraper Class:
     - a script containing all methods used for scraping
     - imports and initializes in the main code
