@@ -20,46 +20,37 @@ The contents for both sites where chosen because they compliment each other, ran
 **TECHNOLOGY**
 
 Python:   
-
     -commonly used for web scraping and data crawling
     
 VSCode:
-
     - an industry standard and great pairing for Python
     
 GutHub:
-
     - industry standard and was used for its version control
     
 Selenium:
-
     - it is a popular freeware automation tool, its also open source and has good documentaion.
     - it can also run multiple scripts on multiple urls at once which matched the end goal of scraping and comparing recipies with similar names from more than one 
 site
 
 Chrome Driver:
-
     - chrome is the dominant browser
     
 Requests:
-
     - chosen for its various options to access html elements and was found to have more prectical to use than BeautifulSoup. 
     - it can also be used on multiple sites at once
     
 UUID:
-
     - used to generate a unique id for each recipe for system use
     - industry standard method
     
 JSON:
-
     - easily readable by both human and computer
     - used in web-based applications for browser to server exchange
     - works like a python dictionary
     - Has a key and corrisponding value
     
 unittests:
-
     - built in package
     - can be used for both unit and integration testing
 
