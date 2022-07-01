@@ -15,7 +15,7 @@ The contents for both sites where chosen because they compliment each other, ran
 
 ![image](https://user-images.githubusercontent.com/100158073/176406808-57829b3e-ff97-4e4b-8d1a-19aa395870c9.png)
 
-TECHNOLOGY: 
+**TECHNOLOGY: **
 Python:        
     -commonly used for web scraping and data crawling
 VSCode:
@@ -42,7 +42,7 @@ unittests:
     - built in package
     - can be used for both unit and integration testing
 
-FEATURES:
+**FEATURES:**
 Scraper Class:
     - a script containing all methods used for scraping
     - imports and initializes in the main code
@@ -56,8 +56,6 @@ Navigation:
     - Extra: finds the title and uses it to navigate back to the home screen
     - Extra: finds the search bar and uses a search term passed as an arguments to navigate to specific recipes
     - Extra: closes or quits using a method instead of the driver
-<<<<<<< HEAD
-=======
     
 ![image](https://user-images.githubusercontent.com/100158073/176403275-aad68204-517e-400d-9178-6c243b64b538.png)
 >>>>>>> ae29c086dd4de6f02752c3f6cf85922affb80129
@@ -88,11 +86,11 @@ UUID:
 - Creates a system id using UUID, a 124 bit lable, use is standard in the industry
 
 Scrapes Recipe Details:
-=======
+
 ![image](https://user-images.githubusercontent.com/100158073/176398340-3cac3d35-93cc-4b09-9259-052366b6418f.png)
 
 Scrapes Recipe Details
->>>>>>> ae29c086dd4de6f02752c3f6cf85922affb80129
+
 - Finds the element and downloads the text using .text
 - Finds the image container and stores the link for each image in a list
 - Stores each element in a dictionary. Most elements are single strings, the last element is a list of image links
@@ -106,7 +104,7 @@ JSON File:
 - Handels error 'TypeError: Object of type WebElement is not JSON serializable' by converting the dictionary to a string
 
 Downloads Images:
-=======
+
 ![image](https://user-images.githubusercontent.com/100158073/176403675-92975bd7-cc35-4470-8951-69ae9b85f399.png)
 
 Downloads Images
