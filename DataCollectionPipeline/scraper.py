@@ -19,11 +19,20 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
+import decorators
+from decorators import exceptionHandling # used for genral exception handling
+from decorators import scrapeHandling # used for scraping specific exception handling
+from decorators import folderAlreadyExists # used for folder creation
 
-#from selenium.webdriver.chrome.options import Options
+
+from selenium.webdriver.chrome.options import Options
 #from webdriver_manager.chrome import ChromeDriverManager
 
-driver = webdriver.Chrome()
+#driver = webdriver.Chrome()
+options = webdriver.ChromeOptions()
+options.add_experimental_option("excludeSwitches", ["enable-logging"])
+driver = webdriver.Chrome(options=options)
+#driver = webdriver.Chrome(options=options, executable_path=r'C:\WebDrivers\chromedriver.exe')
 
 class data:
 
@@ -67,24 +76,9 @@ class scraper:
         self.getURL(url) # Have to start somewhere
         self.run(self)
         self.closeSession() # Have to end somewhere
-    
-    # DECORATORS
-
-    def exceptionHandling(func):
-        @functools.wraps(func) # maintains introspection
-        def wrapper(*args, **kwargs):
-            try:
-                func(*args, **kwargs)
-            except NoSuchElementException:
-                print(f"{func.__name__} Exception: Element Not Found")
-            except TimeoutException:
-                print(f"{func.__name__} Exception: Timeout")
-            return func(*args, **kwargs)
-        return wrapper
-
 
     def run(self):
-        #self.acceptCookies()
+        self.acceptCookies()
         data.currentURL = self.findRecipeList(self)
         self.getAllRecipePages(self, data.currentURL)
         self.getRecipes(self, data.currentURL)
@@ -112,7 +106,7 @@ class scraper:
         '''Fetches source code for the page.'''
         data.source = driver.page_source
 
-    @exceptionHandling
+    @decorators.exceptionHandling
     def search(self, searchTerm):
         '''Finds search bar, types in the search term which it takes as a perameter and clicks to navigate to the next page.'''
         button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'nav-searchbar-btn')))
@@ -127,25 +121,25 @@ class scraper:
         except:
             print("Exception: No search term input")
     
-    @exceptionHandling
+    @decorators.exceptionHandling
     def findSearchbar(self, searchTerm):
 
         data.searchbar = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.NAME, "sb")))
         self.searchbarTextAndClick(searchTerm)
 
-    @exceptionHandling
+    @decorators.exceptionHandling
     def home():
         '''Finds the title and clicks it.'''
         title = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'nav-image')))
         title.click()
 
-    @exceptionHandling
+    @decorators.exceptionHandling
     def findRecipeList(self):
         '''Finds the recipe tab and clicks it.'''
         data.button = WebDriverWait(driver,5).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
         data.button.click()
 
-    @exceptionHandling
+    @decorators.exceptionHandling
     def acceptCookies():
         '''Finds the accept cookies button and clicks it.'''
         data.button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[2]')))
@@ -157,7 +151,7 @@ class scraper:
         self.getRecipeContainer()
         self.makeRecipeList()
 
-    @exceptionHandling
+    @decorators.exceptionHandling
     def getRecipeContainer():
         data.container = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//*[@id='index-item-container']/div/div[2]/ul"))) 
 
@@ -178,7 +172,7 @@ class scraper:
         self.getTotalPages()
         self.getSearchList()
 
-    @exceptionHandling
+    @decorators.exceptionHandling
     def getTotalPages():
          #totalPages = driver.find_element(By.CLASS_NAME, 'page-text') #actual
         data.totalPages = [1, 2, 3] #temp to shorten runtime
@@ -338,7 +332,7 @@ class scraper:
             print("Exception: Timeout: Didnt Find Main Image")
             data.mainPhoto = "N/A"
 
-    @exceptionHandling
+    @decorators.exceptionHandling
     def scrapeImages():
         imageContainer = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-video"]/div[2]'))) # Find the container
         imageList = imageContainer.find_elements(By.XPATH, 'img') # Find the children
@@ -347,7 +341,7 @@ class scraper:
             link = i.get_attribute('src')
             data.imageLinks.append(link)
 
-    @exceptionHandling
+    @decorators.exceptionHandling
     def getRecipeDetails(self, url):
         self.getURL(url)
 

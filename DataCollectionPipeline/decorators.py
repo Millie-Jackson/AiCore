@@ -16,6 +16,23 @@ def exceptionHandling(func):
         return func(*args, **kwargs)
     return wrapper
 
+# When there is no element it returns N/A
+def scrapeHandling(element):
+    def wrapperOuter(func):
+        @functools.wraps(func) # maintains introspection
+        def wrapperInner(*args, **kwargs):
+            try:
+                func(*args, **kwargs)
+            except NoSuchElementException:
+                print(f"{func.__name__} Exception:", element, "Not Found")
+                element = "N/A"
+            except TimeoutException:
+                print(f"{func.__name__} Exception: Timeout")
+                element = "N/A"
+            return func
+        return wrapperInner
+    return wrapperOuter
+
 def folderAlreadyExists(folderName):
     def wrapperOuter(func):
         @functools.wraps(func) # maintains introspection
@@ -63,23 +80,6 @@ def slowDown(func):
         time.sleep(1)
         return func(*args, **kwargs)
     return wrapper
-
-# When there is no element it returns N/A
-def scrapeHandling(element):
-    def wrapperOuter(func):
-        @functools.wraps(func) # maintains introspection
-        def wrapperInner(*args, **kwargs):
-            try:
-                func(*args, **kwargs)
-            except NoSuchElementException:
-                print(f"{func.__name__} Exception:", element, "Not Found")
-                element = "N/A"
-            except TimeoutException:
-                print(f"{func.__name__} Exception: Timeout")
-                element = "N/A"
-            return func
-        return wrapperInner
-    return wrapperOuter
 
 # Counts the number of time the function has been called
 def callCount(func):
