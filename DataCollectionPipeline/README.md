@@ -15,7 +15,7 @@ The contents for both sites where chosen because they compliment each other, ran
 
 ![image](https://user-images.githubusercontent.com/100158073/176406808-57829b3e-ff97-4e4b-8d1a-19aa395870c9.png)
 
-**TECHNOLOGY: **
+**TECHNOLOGY:**
 Python:        
     -commonly used for web scraping and data crawling
 VSCode:
