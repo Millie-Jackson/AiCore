@@ -637,12 +637,12 @@ class scraper:
             print("Exception: Timeout: Didnt Find Main Image")
             data.mainPhoto = "N/A"
 
-    @decorators.exceptionHandling
+    @exceptionHandling
     def scrapeImages() -> None:
         '''
         This function scrapes the other images from the recipe. Exception handling is done with a decorator
 
-        This function finds the image container then puts its children into a list. Finally the list is 
+        This function finds the image container then puts its children into a list. A limit is set based on the number of images found for later use. Finally the list is 
         iterated to get each images url link to create a list of image links
 
         Args:
@@ -650,9 +650,10 @@ class scraper:
         Returns:
 
         '''
-
+        
         imageContainer = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '//*[@id="recipe-video"]/div[2]'))) # Find the container
         imageList = imageContainer.find_elements(By.XPATH, 'img') # Find the children
+        data.imageScrapeLimiter = len(imageList)
 
         for i in imageList:
             link = i.get_attribute('src')
@@ -785,37 +786,32 @@ class scraper:
         with open(os.path.join('raw_data', 'data.json'), 'w') as json_file:
             json.dump(str(data.recipeDetails), json_file)
 
-    def downloadImage(self, url, recipeName) -> None:
+    def downloadImage(self, url) -> None:
         '''
         This function creates a folder.
         
-        This function creates a folder called 'images' and another with the recipe name 
-        in the path for the image files to be downloaded into
-        Uses a try except catch in a decorator as it will throw an error if the folders already exists
-        Adds User-Agent Headers to bypass 403 error
-        Downloads the images into the folder of that recipe name
+        This function calls the function that creates a folder called 'images' 
+        Then calls the function that creates a folder named after the recipes name 
+        Adds User-Agent Headers in a try/catch exeption handler to bypass 403 error
+        Downloads the image into the folder of that recipe name
         
         Args:
         
         Returns:
         
         '''
-
         self.makeImagesFolder()
         self.makeRecipeFolder()
-        
+
         try:
             # Adds headers to resolve 403 Fobidden Error
             opener=urllib.request.build_opener()
             opener.addheaders=[('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1941.0 Safari/537.36')]
             urllib.request.install_opener(opener)
-
-            downloadDirectory = "images/" + data.recipeDirectory + "/"
-            fileType = '.jpg'
-            fileName = downloadDirectory + recipeName + fileType
-            image = urllib.request.urlretrieve(url, fileName)
+            path = os.path.join(data.recipeDirectory, data.imageFileName + '.jpg')
+            urllib.request.urlretrieve(url, path)
         except:
-            print("Error Downloading Images")           
+            print("Error Downloading Images")          
 
     def makeImagesFolder() -> None:
         '''
@@ -873,21 +869,16 @@ class scraper:
         Returns:
 
         '''
-        
+
         self.getRecipeDetails(self, url)
-        
+
         for i in data.recipeDetails['Images']:
-
+            
             for j in i:
-                IDtoName = data.recipeDetails['ID'][0]
-                IDtoName = IDtoName[0].replace("-", " ")
-                IDtoName = IDtoName.title()
+                data.imageFileName = data.name + " " + str(data.count) + ".jpg"
+                self.downloadImage(self, j)
 
-                for i in IDtoName:
-                    if i.isdigit():
-                        IDtoName = IDtoName.replace(i, "")
-
-        s = str(data.count)
-        data.recipeName = IDtoName + s + ".jpg"
-        self.downloadImage(self, j, data.recipeName)
-        data.count = data.count + 1              
+                if data.count < data.imageScrapeLimiter:
+                    data.count = data.count + 1
+                else:
+                    data.count = 0              
