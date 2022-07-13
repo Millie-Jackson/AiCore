@@ -78,8 +78,8 @@ class scraper:
     def intitialize(self, url, searchTerm):
         global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
     
-        self.getURL(self, url) # Have to start somewhere
-        self.run(self)
+        self.getURL(url) # Have to start somewhere
+        self.run()
         self.closeSession() # Have to end somewhere
 
     def run(self) -> None:
@@ -116,7 +116,7 @@ class scraper:
             data.currentURL = i
             self.makeImage(self, data.currentURL)
 
-    def getURL(url) -> None:
+    def getURL(self, url) -> None:
         '''
         Navigates to a website using a url passed as a perameter.
         
@@ -243,7 +243,7 @@ class scraper:
         data.button.click()
 
     @decorators.exceptionHandling
-    def acceptCookies() -> None:
+    def acceptCookies(self) -> None:
         '''
         Finds the accept cookies button and clicks it.
         
