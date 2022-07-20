@@ -271,7 +271,20 @@ class scraper:
             data.imageLinks.append(link)
 
     @exceptionHandling
-    def __getRecipeDetails(self, url):
+    def getRecipeDetails(self, url) -> None:
+        '''
+        This function calls the scrape functions
+
+        This function navigates to a recipe page and calls all the scrape functions to collect 
+        the data from the page. It the calls the function that stores all the data in a dictionary 
+        and calls the function that writes that dictionary to a json file
+
+        Args:
+            url (str): The recipe page url
+        
+        Returns:
+
+        '''
         self.__getURL(url)
 
         self.__scrapeName()  
@@ -291,7 +304,7 @@ class scraper:
         self.__scrapeImages()
 
         self.__storeDetails(url)
-        self.__jsonFile()
+        self.jsonFile()
 
     def __storeDetails(self, url):
         data.recipeDetails = {'ID': [], 'Name': [], 'Photo': [],'Tags': [], 'Description': [], 'Total Time': [], 'Prep Time': [], 'Cook Time': [], 'Allergens': [], 'Swaps': [], 'Free From': [], 'Ingredients': [], 'Directions': [], 'Notes': [], 'Storage': [], 'Images': []}
@@ -312,33 +325,50 @@ class scraper:
         data.recipeDetails['Storage'].append(data.storage)
         data.recipeDetails['Images'].append(data.imageLinks)
 
-    def __jsonFile(self):
-        '''Creates a folder called 'raw_data' in the path for the json file to be saved in
-        Uses a try except catch as it will throw an error if the folder already exists'''
+    def jsonFile(self) -> None:
+        '''This function creates a folder for the json file to be stored in
+        
+        This function creates a folder called 'raw_data' in the path for the 
+        json file to be saved in. Uses a try except catch as it will throw an 
+        error if the folder already exists.
+
+        Args:
+
+        Returns:
+        
+        '''
 
         self.__makeRaw_DataFolder()
 
-        '''Deals with TypeError: Object of type UUID is not JSON serializable by encoding the UUID'''
+        # Deals with TypeError: Object of type UUID is not JSON serializable by encoding the UUID
         JSONEncoder_olddefault = JSONEncoder.default
-        def __JSONEncoder_newdefault(self, o):
+        def JSONEncoder_newdefault(self, o):
             if isinstance(o, UUID): return str(o)
             return JSONEncoder_olddefault(self, o)
-        JSONEncoder.default = __JSONEncoder_newdefault
+        JSONEncoder.default = JSONEncoder_newdefault
 
-        self.__jsonDump()
-
-    @folderAlreadyExists("raw_data")
-    def __makeRaw_DataFolder(self):
+        self.jsonDump()
         
+    @folderAlreadyExists("raw_data")
+    def __makeRaw_DataFolder():      
         data.dataDirectory = "raw_data"
         parent_dir = "C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline"
         path = os.path.join(parent_dir, data.dataDirectory)
         os.mkdir(path)
         print("Directory '% s' created" % data.dataDirectory)
     
-    def __jsonDump(self):
-        '''Stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
-        The dicrionary is converted to a string using str() to deal with 'TypeError: Object of type WebElement is not JSON serializable'''
+    def jsonDump(self) -> None:
+        '''This function writes the dictionary data to a json file
+        
+        This function stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
+        The dicrionary is converted to a string using str() to deal with 'TypeError: Object of type WebElement is not JSON serializable
+        
+        Args:
+        
+        Returns:
+        
+        '''
+        
         with open(os.path.join('raw_data', 'data.json'), 'w') as json_file:
             json.dump(str(data.recipeDetails), json_file)
 
@@ -387,7 +417,7 @@ class scraper:
         Removes all unecissary elements from the ID string to create a file name
         Pass the file name to 'downloadImages() to create a file'''
         
-        self.__getRecipeDetails(url)
+        self.getRecipeDetails(url)
         
         for i in data.recipeDetails['Images']:
             for j in i:
