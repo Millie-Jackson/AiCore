@@ -775,17 +775,23 @@ class scraper:
     def jsonDump(self) -> None:
         '''This function writes the dictionary data to a json file
         
-        This function stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
+        This function creates a name for the json file using the scraped recipe name and appending it with the file type
+        It stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
         The dicrionary is converted to a string using str() to deal with 'TypeError: Object of type WebElement is not JSON serializable
+        The function to upload the json to the bucket is then called
         
         Args:
         
         Returns:
         
         '''
+        data.jsonFileName = data.name + '.json'
+        path = os.path.join('raw_data', data.jsonFileName)
         
-        #with open(os.path.join('raw_data', 'data.json'), 'w') as json_file:
-            #json.dump(str(data.recipeDetails), json_file)
+        with open(path, 'w') as json_file:
+            json.dump(str(data.recipeDetails), json_file, indent = 6)
+        
+        self.__bucketJson(self, path, data.jsonFileName)
 
     def downloadImage(self, url) -> None:
         '''
@@ -902,3 +908,19 @@ class scraper:
         # Uploads files to bucket
         s3_client = boto3.client('s3')
         response = s3_client.upload_file(path, data.bucket, imageFileName) # (file_name, bucket, object_name)
+
+    def __bucketJson(self, path, jsonFileName) -> None:
+        '''
+        This function uploads the json to the bucket
+        
+        Args:
+             path(str): The directory the json is stored
+             jsonFileName(str): The string used to name the file 
+        
+        Returns:
+        
+        '''
+
+        # Uploads files to bucket
+        s3_client = boto3.client('s3')
+        response = s3_client.upload_file(path, data.bucket, jsonFileName) # (file_name, bucket, object_name)
