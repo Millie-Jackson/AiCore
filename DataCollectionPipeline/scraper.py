@@ -1,5 +1,5 @@
 import functools # used to maintain introspection on decorators
-#import requests
+import requests
 import urllib
 import boto3 # used to access AWS resources
 import time
@@ -928,3 +928,37 @@ class scraper:
         # Uploads files to bucket
         s3_client = boto3.client('s3')
         response = s3_client.upload_file(path, data.bucket, jsonFileName) # (file_name, bucket, object_name)
+
+    def __bucketDownloadJson(self, url, jsonFileName) -> None:
+        '''
+        This function downloads the json into the local directory
+        
+        Args:
+             url(str): The url for the file stored in the bucket
+             jsonFileName(str): The string used to name the file 
+        
+        Returns:
+        
+        '''
+
+        response = requests.get(url, jsonFileName)
+        path = os.path.join('raw_data', jsonFileName)
+        with open(path, 'wb') as f:
+            f.write(response.content)
+
+    def __bucketDownloadImage(self, url, imageFileName) -> None:
+        '''
+        This function downloads the image into the local directory
+        
+        Args:
+             url(str): The url for the file stored in the bucket
+             jsonFileName(str): The string used to name the file 
+        
+        Returns:
+        
+        '''
+
+        response = requests.get(url, imageFileName)
+        path = os.path.join('raw_data', imageFileName)
+        with open(path, 'wb') as f:
+            f.write(response.content)
