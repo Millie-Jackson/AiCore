@@ -1,5 +1,5 @@
 import functools # used to maintain introspection on decorators
-import requests
+#import requests
 import urllib
 import boto3 # used to access AWS resources
 import time
@@ -28,7 +28,6 @@ from decorators import folderAlreadyExists # used for folder creation
 #from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.options import Options
 #from webdriver_manager.chrome import ChromeDriverManager
-
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
@@ -74,6 +73,9 @@ class data:
     timeCook = "" # Used to store scraped cook time
     timePrep = "" # Used to store scraped recipe  prep time 
     timeTotal = "" # Used to store scraped total time it takes to make the recipe
+
+    # Cloud Management
+    bucket = 'data-collection-pipeline-bucket'
 
 class scraper:
     def intitialize(self, url, searchTerm):
@@ -785,13 +787,15 @@ class scraper:
         Returns:
         
         '''
+
         data.jsonFileName = data.name + '.json'
         path = os.path.join('raw_data', data.jsonFileName)
-        
-        with open(path, 'w') as json_file:
+        dir = os.path.join('C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/', data.jsonFileName)
+
+        with open(dir, 'w') as json_file:
             json.dump(str(data.recipeDetails), json_file, indent = 6)
         
-        self.__bucketJson(self, path, data.jsonFileName)
+        self.__bucketJson(path, data.jsonFileName)
 
     def downloadImage(self, url) -> None:
         '''
@@ -821,7 +825,7 @@ class scraper:
         except:
             print("Error Downloading Images")
         
-        self.__bucketImage(self, path, data.imageFileName)          
+        self.__bucketImage(path, data.imageFileName)          
 
     def makeImagesFolder(self) -> None:
         '''
@@ -844,7 +848,7 @@ class scraper:
         except:
             print("Folder already exists: images")
 
-    def makeRecipeFolder() -> None:
+    def makeRecipeFolder(self) -> None:
         '''
         This function makes a folder.
 
@@ -886,7 +890,7 @@ class scraper:
             
             for j in i:
                 data.imageFileName = data.name + " " + str(data.count) + ".jpg"
-                self.downloadImage(self, j)
+                self.downloadImage(j)
 
                 if data.count < data.imageScrapeLimiter:
                     data.count = data.count + 1
