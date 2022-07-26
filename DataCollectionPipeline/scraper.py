@@ -21,6 +21,9 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
 import decorators
+import dataClass
+import bucketClass
+
 from decorators import exceptionHandling # used for genral exception handling
 from decorators import scrapeHandling # used for scraping specific exception handling
 from decorators import folderAlreadyExists # used for folder creation
@@ -32,50 +35,6 @@ from selenium.webdriver.chrome.options import Options
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
 driver = webdriver.Chrome(options=options)
-
-
-class data:
-
-    articles = [] # Used to make a list of recipes
-    button = None # Used to interact with various button elements
-    container = None # Used to store various container elements
-    currentURL = "" # Used to store various urls 
-    pages = [] # Used to append a list with pages links
-    recipeLinks = [] # Used to store recipe links
-    recipeName = "" # Stores the recipe name
-    searchbar = None # Used to interact with search bar
-    source = "" # Used to get page source code
-    tag = None # Used to store various tag elements
-    title = "" # Used to get the title
-    totalPages = [] # Stores a list of pages
-
-    # File Management
-    count = 0 # Used in the creation of image filenames
-    dataDirectory = "" # Used to create folder
-    imageDirectory = "" # Used to create folder 
-    recipeDirectory = "" # Used to create modified folder names
-
-    # Scraped Information
-    recipeDetails = {} # Used to store all the scraped recipe details
-
-    allergens = "" # Used to store scraped allergens
-    alternatives = "" #Used to store scraped alternatives
-    description = "" # Used to store the scraped description of the recipe
-    freeFrom = "" # Used to store the scraped free from information
-    imageLinks = [] # Used to scrape all of a recipes image links
-    ingredients = "" # Used to store the scraped ingredients
-    instructions = "" # Used to store scraped instructions
-    mainPhoto = None # Used to store main photo link
-    name = "" # Used to store scraped recipe name
-    notes = "" # Used to store scraped recipe notes
-    recipeTags = "" # Used to store scraped recipe tags
-    storage = "" # Used to store scraped storage instructions
-    timeCook = "" # Used to store scraped cook time
-    timePrep = "" # Used to store scraped recipe  prep time 
-    timeTotal = "" # Used to store scraped total time it takes to make the recipe
-
-    # Cloud Management
-    bucket = 'data-collection-pipeline-bucket'
 
 class scraper:
     def intitialize(self, url, searchTerm):
@@ -897,83 +856,3 @@ class scraper:
                 else:
                     data.count = 0      
 
-    def __bucketImage(self, path, imageFileName) -> None:
-        '''
-        This function uploads the image to the bucket
-        
-        Args:
-             path(str): The directory the image is stored in
-             imageFileName(str): The string used to name the image 
-        
-        Returns:
-        
-        '''
-
-        # Uploads files to bucket
-        s3_client = boto3.client('s3')
-        response = s3_client.upload_file(path, data.bucket, imageFileName) # (file_name, bucket, object_name)
-
-    def __bucketJson(self, path, jsonFileName) -> None:
-        '''
-        This function uploads the json to the bucket
-        
-        Args:
-             path(str): The directory the json is stored
-             jsonFileName(str): The string used to name the file 
-        
-        Returns:
-        
-        '''
-
-        # Uploads files to bucket
-        s3_client = boto3.client('s3')
-        response = s3_client.upload_file(path, data.bucket, jsonFileName) # (file_name, bucket, object_name)
-
-    def __bucketDownloadJson(self, url, jsonFileName) -> None:
-        '''
-        This function downloads the json into the local directory
-        
-        Args:
-             url(str): The url for the file stored in the bucket
-             jsonFileName(str): The string used to name the file 
-        
-        Returns:
-        
-        '''
-
-        response = requests.get(url, jsonFileName)
-        path = os.path.join('raw_data', jsonFileName)
-        with open(path, 'wb') as f:
-            f.write(response.content)
-
-    def __bucketDownloadImage(self, url, imageFileName) -> None:
-        '''
-        This function downloads the image into the local directory
-        
-        Args:
-             url(str): The url for the file stored in the bucket
-             jsonFileName(str): The string used to name the file 
-        
-        Returns:
-        
-        '''
-
-        response = requests.get(url, imageFileName)
-        path = os.path.join('raw_data', imageFileName)
-        with open(path, 'wb') as f:
-            f.write(response.content)
-
-    def __bucketDisplay(self) -> None:
-        '''
-        This function displays which files in the bucket
-        
-        Args:
-        
-        Returns:
-        
-        '''
-
-        s3 = boto3.resource('s3')
-        my_bucket = s3.Bucket(data.bucket)
-        for file in my_bucket.objects.all():
-            print(file.key)
