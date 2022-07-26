@@ -962,3 +962,18 @@ class scraper:
         path = os.path.join('raw_data', imageFileName)
         with open(path, 'wb') as f:
             f.write(response.content)
+
+    def __bucketDisplay(self) -> None:
+        '''
+        This function displays which files in the bucket
+        
+        Args:
+        
+        Returns:
+        
+        '''
+
+        s3 = boto3.resource('s3')
+        my_bucket = s3.Bucket(data.bucket)
+        for file in my_bucket.objects.all():
+            print(file.key)
