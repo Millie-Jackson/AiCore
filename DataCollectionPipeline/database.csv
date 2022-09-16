@@ -1,4 +1,5 @@
 ID,NAME,TAGS,DESCRIPTION,TOTAL_TIME,PREP_TIME,COOK_TIME,ALLERGENS,SWAPS,FREE_FROM,INGREDIENTS,NOTES,STORAGE,IMAGES
 "0     strawberry-milk-bubble-tea-1012 UUIDe2b6d6ab-...
 Name: 1, dtype: object", Strawberry Milk Bubble Tea , Drink , The vibrant strawberry purée adds a delicious juicy burst of flavour to the creamy sweet milk. The chewy pearls add a wonderful texture and makes this a filling summer drink. Total Time,25,10,15,"0     soy 
-Name: 9, dtype: object",,0,0,0,0,0
+Name: 9, dtype: object",,"0     peanut, ntree nut, nsesame 
+Name: 11, dtype: object",0,0,0,0
