@@ -20,9 +20,8 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
-import decorators
-import dataClass
-import bucketClass
+from selenium.webdriver.chrome.options import Options
+#from webdriver_manager.chrome import ChromeDriverManager
 
 from decorators import exceptionHandling # used for genral exception handling
 from decorators import scrapeHandling # used for scraping specific exception handling
@@ -32,13 +31,55 @@ from decorators import folderAlreadyExists # used for folder creation
 from selenium.webdriver.chrome.options import Options
 #from webdriver_manager.chrome import ChromeDriverManager
 
+#driver = webdriver.Chrome()
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
 driver = webdriver.Chrome(options=options)
 
+
+class data:
+
+    articles = [] # Used to make a list of recipes
+    button = None # Used to interact with various button elements
+    container = None # Used to store various container elements
+    currentURL = "" # Used to store various urls 
+    pages = [] # Used to append a list with pages links
+    recipeLinks = [] # Used to store recipe links
+    recipeName = "" # Stores the recipe name
+    searchbar = None # Used to interact with search bar
+    source = "" # Used to get page source code
+    tag = None # Used to store various tag elements
+    title = "" # Used to get the title
+    totalPages = [] # Stores a list of pages
+
+    # File Management
+    count = 0 # Used in the creation of image filenames
+    dataDirectory = "" # Used to create folder
+    imageDirectory = "" # Used to create folder 
+    recipeDirectory = "" # Used to create modified folder names
+
+    # Scraped Information
+    recipeDetails = {} # Used to store all the scraped recipe details
+
+    allergens = "" # Used to store scraped allergens
+    alternatives = "" #Used to store scraped alternatives
+    description = "" # Used to store the scraped description of the recipe
+    freeFrom = "" # Used to store the scraped free from information
+    imageLinks = [] # Used to scrape all of a recipes image links
+    ingredients = "" # Used to store the scraped ingredients
+    instructions = "" # Used to store scraped instructions
+    mainPhoto = None # Used to store main photo link
+    name = "" # Used to store scraped recipe name
+    notes = "" # Used to store scraped recipe notes
+    recipeTags = "" # Used to store scraped recipe tags
+    storage = "" # Used to store scraped storage instructions
+    timeCook = "" # Used to store scraped cook time
+    timePrep = "" # Used to store scraped recipe  prep time 
+    timeTotal = "" # Used to store scraped total time it takes to make the recipe
+
 class scraper:
-    def intitialize(self, url, searchTerm):
-        global_ids = scraper.getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
+    def intitialize(self, url, searchTerm, delay):
+        global_ids = scraper.__getUniqueID(scraper, 'https://www.pickuplimes.com/recipe/spicy-garlic-wok-noodles-213')
     
         self.getURL(url) # Have to start somewhere
         self.run()
@@ -57,11 +98,11 @@ class scraper:
 
         '''
         
-        #self.acceptCookies()
-        data.currentURL = self.findRecipeList()
-        self.getAllRecipePages(data.currentURL)
-        self.getRecipes(data.currentURL)
-        self.cycleRecipeLinks()
+        self.acceptCookies()
+        data.currentURL = self.findRecipeList(self)
+        self.getAllRecipePages(self, data.currentURL)
+        self.getRecipes(self, data.currentURL)
+        self.cycleRecipeLinks(self)
         self.closeSession()   
 
     def cycleRecipeLinks(self) -> None:
@@ -76,7 +117,18 @@ class scraper:
 
         for i in data.recipeLinks:
             data.currentURL = i
-            self.makeImage(data.currentURL)
+            self.__makeImage(data.currentURL)
+
+    def __getURL(url) -> None:
+        '''
+        Navigates to a website using a url passed as a perameter.
+        
+        Args:
+            url (str): The target website
+        
+        Returns:
+
+        '''
 
     def getURL(self, url) -> None:
         '''
@@ -91,7 +143,7 @@ class scraper:
 
         driver.get(url) 
 
-    def getTitle(self) -> None:
+    def getTitle() -> None:
         '''
         Fetches the title.
         
@@ -103,7 +155,7 @@ class scraper:
 
         data.title = driver.title
 
-    def closeSession(self) -> None:
+    def closeSession() -> None:
         '''
         Closes the driver
         
@@ -144,7 +196,7 @@ class scraper:
 
         self.findSearchbar(self, searchTerm)
 
-    def searchbarTextAndClick(self, searchTerm) -> None:
+    def searchbarTextAndClick(searchTerm) -> None:
         '''
         This function types the searchTerm into the searchbar and presses enter which then navigates to the search results page.
 
@@ -174,7 +226,18 @@ class scraper:
         '''
 
         data.searchbar = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.NAME, "sb")))
-        self.searchbarTextAndClick(searchTerm)
+        self.__searchbarTextAndClick(searchTerm)
+
+    @exceptionHandling
+    def __home() -> None:
+        '''
+        Finds the title and clicks it.
+        
+        Args:
+        
+        Returns:
+        
+        '''
 
     @decorators.exceptionHandling
     def home(self) -> None:
@@ -190,8 +253,8 @@ class scraper:
         title = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID, 'nav-image')))
         title.click()
 
-    @decorators.exceptionHandling
-    def findRecipeList(self) -> None:
+    @exceptionHandling
+    def __findRecipeList(self) -> None:
         '''
         Finds the recipe tab and clicks it.
         
@@ -204,8 +267,8 @@ class scraper:
         data.button = WebDriverWait(driver,5).until(EC.presence_of_element_located((By.LINK_TEXT, 'Recipes')))
         data.button.click()
 
-    @decorators.exceptionHandling
-    def acceptCookies(self) -> None:
+    @exceptionHandling
+    def ___acceptCookies(self) -> None:
         '''
         Finds the accept cookies button and clicks it.
         
@@ -218,7 +281,7 @@ class scraper:
         data.button = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, '/html/body/div/div[2]/div[2]')))
         data.button.click()
     
-    def getRecipes(self, url) -> None:
+    def __getRecipes(self, url) -> None:
         '''
         Calls the functions to find the recipe container and puts all the recipes in a list.
         
@@ -229,11 +292,11 @@ class scraper:
         
         '''
 
-        self.getRecipeContainer()
-        self.makeRecipeList()
+        self.__getRecipeContainer()
+        self.__makeRecipeList()
 
-    @decorators.exceptionHandling
-    def getRecipeContainer(self) -> None:
+    @exceptionHandling
+    def __getRecipeContainer() -> None:
         '''
         This function finds the recipe container
 
@@ -245,7 +308,7 @@ class scraper:
 
         data.container = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, "//*[@id='index-item-container']/div/div[2]/ul"))) 
 
-    def makeRecipeList(self) -> None:
+    def __makeRecipeList() -> None:
         '''
         This function finds the individual recipe page link and stores it in a list
 
@@ -265,7 +328,7 @@ class scraper:
             data.tag = i.find_element(By.TAG_NAME, 'a')
             data.recipeLinks.append(data.tag.get_attribute('href'))
 
-    def getPageURL() -> None:
+    def __getPageURL() -> None:
         '''
         Returns the current page url.
         
@@ -305,7 +368,7 @@ class scraper:
          #totalPages = driver.find_element(By.CLASS_NAME, 'page-text') #actual
         data.totalPages = [1, 2, 3] #temp to shorten runtime
 
-    def getSearchList(self) -> None:
+    def __getSearchList(self) -> None:
         '''
         This function retrieves the url of each search result by modifying the url.
 
@@ -320,7 +383,7 @@ class scraper:
             next_page = data.currentURL + url_change
             data.pages.append(next_page)
 
-    def getUniqueID(self, url) -> None:
+    def __getUniqueID(self, url) -> None:
         '''
         This function creates a uuid for each recipe by modifying  a url as a perameter. 
 
@@ -336,7 +399,8 @@ class scraper:
 
         ids = (just_ID, uuid.uuid4())
 
-    def scrapeName(self) -> None:
+    @scrapeHandling(data.name)
+    def __scrapeName(self) -> None:
         '''
         This function scrapes the name of the recipe. Exception handling is done with a decorator
 
@@ -354,7 +418,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Name")
             data.name = "N/A" 
 
-    def scrapeTags(self) -> None:
+    @scrapeHandling(data.recipeTags)
+    def __scrapeTags(self) -> None:
         '''
         This function scrapes the tags of the recipe. Exception handling is done with a decorator
 
@@ -373,7 +438,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Tag")
             data.recipeTags = "N/A"
 
-    def scrapeDescription(self) -> None:
+    @scrapeHandling(data.description)
+    def __scrapeDescription(self) -> None:
         '''
         This function scrapes the description of the recipe. Exception handling is done with a decorator
 
@@ -392,7 +458,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Description")
             data.description = "N/A"
 
-    def scrapeTotalTime(self) -> None:
+    @scrapeHandling(data.timeTotal)
+    def __scrapeTotalTime(self) -> None:
         '''
         This function scrapes the total cook time of the recipe. Exception handling is done with a decorator
 
@@ -411,7 +478,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Total-Time")
             data.timeTotal = "N/A"
 
-    def scrapePrepTime(self) -> None:
+    @scrapeHandling(data.timePrep)
+    def __scrapePrepTime(self) -> None:
         '''
         This function scrapes the prep time of the recipe. Exception handling is done with a decorator
 
@@ -430,7 +498,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Prep-Time")
             data.timePrep = "N/A"
 
-    def scrapeCookTime(self) -> None:
+    @scrapeHandling(data.timeCook)
+    def __scrapeCookTime(self) -> None:
         '''
         This function scrapes the cook time of the recipe. Exception handling is done with a decorator
 
@@ -449,7 +518,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Cook-Time")
             data.timeCook = "N/A" 
 
-    def scrapeAllergens(self) -> None:
+    @scrapeHandling(data.allergens)
+    def __scrapeAllergens(self) -> None:
         '''
         This function scrapes the allergens of the recipe. Exception handling is done with a decorator
 
@@ -468,7 +538,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Allergens")
             data.allergens = "N/A"
 
-    def scrapeAlternatives(self) -> None:
+    @scrapeHandling(data.alternatives)
+    def __scrapeAlternatives(self) -> None:
         '''
         This function scrapes the alternative ingrediants of the recipe. Exception handling is done with a decorator
 
@@ -487,7 +558,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Swap")
             data.alternatives = "N/A"
 
-    def scrapeFreeFrom(self) -> None:
+    @scrapeHandling(data.freeFrom)
+    def __scrapeFreeFrom(self) -> None:
         '''
         This function scrapes what the recipe is free from. Exception handling is done with a decorator
 
@@ -505,7 +577,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Free-From")
             data.freeFrom = "N/A" 
 
-    def scrapeIngredients(self) -> None:
+    @scrapeHandling(data.ingredients)
+    def __scrapeIngredients(self) -> None:
         '''
         This function scrapes the recipe ingredients. Exception handling is done with a decorator
 
@@ -524,7 +597,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Ingredients")
             data.ingredients = "N/A"
 
-    def scrapeInstructions(self) -> None:
+    @scrapeHandling(data.instructions)
+    def __scrapeInstructions(self) -> None:
         '''
         This function scrapes the instructions for the recipe. Exception handling is done with a decorator
 
@@ -543,7 +617,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Directions")
             data.instructions = "N/A"
 
-    def scrapeNotes(self) -> None:
+    @scrapeHandling(data.notes)
+    def __scrapeNotes(self) -> None:
         '''
         This function scrapes the notes from the recipe. Exception handling is done with a decorator
 
@@ -562,7 +637,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Notes")
             data.notes = "N/A"
 
-    def scrapeStorage(self) -> None:
+    @scrapeHandling(data.storage)
+    def __scrapeStorage(self) -> None:
         '''
         This function scrapes the storage instructions of the recipe. Exception handling is done with a decorator
 
@@ -581,7 +657,8 @@ class scraper:
             print("Exception: Timeout: Didnt Find Storage")
             data.storage = "N/A"
 
-    def scrapeMainPhoto(self) -> None:
+    @scrapeHandling(data.mainPhoto)
+    def __scrapeMainPhoto(self) -> None:
         '''
         This function scrapes the main image from the recipe. Exception handling is done with a decorator
 
@@ -600,7 +677,7 @@ class scraper:
             data.mainPhoto = "N/A"
 
     @exceptionHandling
-    def scrapeImages(self) -> None:
+    def __scrapeImages(self) -> None:
         '''
         This function scrapes the other images from the recipe. Exception handling is done with a decorator
 
@@ -636,28 +713,8 @@ class scraper:
         Returns:
 
         '''
-        self.getURL(url)
 
-        self.scrapeName()  
-        self.scrapeTags()
-        self.scrapeDescription()
-        self.scrapeTotalTime()
-        self.scrapePrepTime()
-        self.scrapeCookTime()
-        self.scrapeAllergens()
-        self.scrapeAlternatives()
-        self.scrapeFreeFrom()
-        self.scrapeIngredients()
-        self.scrapeInstructions()
-        self.scrapeNotes()
-        self.scrapeStorage()
-        self.scrapeMainPhoto()
-        self.scrapeImages()
-
-        self.storeDetails(url)
-        self.jsonFile()
-
-    def storeDetails(self, url) -> None:
+    def __storeDetails(self, url) -> None:
         '''
         This function updates the data dictionarl with all the scraped information
 
@@ -669,7 +726,7 @@ class scraper:
         '''
 
         data.recipeDetails = {'ID': [], 'Name': [], 'Photo': [],'Tags': [], 'Description': [], 'Total Time': [], 'Prep Time': [], 'Cook Time': [], 'Allergens': [], 'Swaps': [], 'Free From': [], 'Ingredients': [], 'Directions': [], 'Notes': [], 'Storage': [], 'Images': []}
-        data.recipeDetails['ID'].append(self.getUniqueID(url))
+        data.recipeDetails['ID'].append(self.__getUniqueID(url))
         data.recipeDetails['Name'].append(data.name)
         data.recipeDetails['Photo'].append(data.mainPhoto)
         data.recipeDetails['Tags'].append(data.recipeTags)
@@ -686,7 +743,7 @@ class scraper:
         data.recipeDetails['Storage'].append(data.storage)
         data.recipeDetails['Images'].append(data.imageLinks)
 
-    def jsonFile(self) -> None:
+    def __jsonFile(self) -> None:
         '''
         This function creates a folder for the json file to be stored in
         
@@ -700,9 +757,9 @@ class scraper:
         
         '''
 
-        self.makeRaw_DataFolder()
+        self.__makeRaw_DataFolder()
 
-        '''Deals with TypeError: Object of type UUID is not JSON serializable by encoding the UUID'''
+        # Deals with TypeError: Object of type UUID is not JSON serializable by encoding the UUID
         JSONEncoder_olddefault = JSONEncoder.default
         def JSONEncoder_newdefault(self, o):
             if isinstance(o, UUID): return str(o)
@@ -711,7 +768,7 @@ class scraper:
 
         self.jsonDump()
 
-    def makeRaw_DataFolder(self) -> None:
+    def __makeRaw_DataFolderself() -> None:
         '''
         This function creates a folder.
         
@@ -733,28 +790,21 @@ class scraper:
         except:
             print("Folder already exists: raw_data")
     
-    def jsonDump(self) -> None:
-        '''This function writes the dictionary data to a json file
+    def __jsonDump(self) -> None:
+        '''
+        This function writes the dictionary data to a json file
         
-        This function creates a name for the json file using the scraped recipe name and appending it with the file type
-        It stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
+        This function stores data by writing the 'recipe_details' dictionary to a JSON file called 'data.json' in the folder just created
         The dicrionary is converted to a string using str() to deal with 'TypeError: Object of type WebElement is not JSON serializable
-        The function to upload the json to the bucket is then called
         
         Args:
         
         Returns:
         
         '''
-
-        data.jsonFileName = data.name + '.json'
-        path = os.path.join('raw_data', data.jsonFileName)
-        dir = os.path.join('C:/Users/Millie/Documents/AiCore/AiCore/DataCollectionPipeline/', data.jsonFileName)
-
-        with open(dir, 'w') as json_file:
-            json.dump(str(data.recipeDetails), json_file, indent = 6)
         
-        self.__bucketJson(path, data.jsonFileName)
+        with open(os.path.join('raw_data', 'data.json'), 'w') as json_file:
+            json.dump(str(data.recipeDetails), json_file)
 
     def downloadImage(self, url) -> None:
         '''
@@ -764,7 +814,6 @@ class scraper:
         Then calls the function that creates a folder named after the recipes name 
         Adds User-Agent Headers in a try/catch exeption handler to bypass 403 error
         Downloads the image into the folder of that recipe name
-        Calls the function that uploads the image to the bucket
         
         Args:
         
@@ -782,11 +831,9 @@ class scraper:
             path = os.path.join(data.recipeDirectory, data.imageFileName + '.jpg')
             urllib.request.urlretrieve(url, path)
         except:
-            print("Error Downloading Images")
-        
-        self.__bucketImage(path, data.imageFileName)          
+            print("Error Downloading Images")          
 
-    def makeImagesFolder(self) -> None:
+    def __makeImagesFolder(self) -> None:
         '''
         This function makes a folder.
 
@@ -807,7 +854,7 @@ class scraper:
         except:
             print("Folder already exists: images")
 
-    def makeRecipeFolder(self) -> None:
+    def __makeRecipeFolder(self) -> None:
         '''
         This function makes a folder.
 
@@ -828,7 +875,7 @@ class scraper:
         except:
             print("Folder already exists:", data.recipeDirectory)
 
-    def makeImage(self, url) -> None:
+    def __makeImage(self, url) -> None:
         '''
         This function makes a file name for the image and downloads it.
         
@@ -843,16 +890,14 @@ class scraper:
 
         '''
 
-        self.getRecipeDetails(url)
+        self.getRecipeDetails(self, url)
 
         for i in data.recipeDetails['Images']:
-            
             for j in i:
                 data.imageFileName = data.name + " " + str(data.count) + ".jpg"
-                self.downloadImage(j)
+                self.downloadImage(self, j)
 
                 if data.count < data.imageScrapeLimiter:
                     data.count = data.count + 1
                 else:
-                    data.count = 0      
-
+                    data.count = 0              
