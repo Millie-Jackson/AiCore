@@ -37,6 +37,8 @@ options.add_experimental_option("excludeSwitches", ["enable-logging"])
 driver = webdriver.Chrome(options=options)
 
 
+
+
 class data:
 
     articles = [] # Used to make a list of recipes
@@ -179,7 +181,7 @@ class scraper:
 
         data.source = driver.page_source
 
-    @decorators.exceptionHandling
+    #python -m unittest@decorators.exceptionHandling
     def search(self, searchTerm) -> None:
         '''
         Finds search bar and clicks it ready for input.
@@ -187,7 +189,8 @@ class scraper:
         Args:
             searchTerm (str): The word passed to the findSearchBar() fucntion that types into the search box
         
-        Returns:
+        Returns:python -m unittest
+
 
         '''
 
@@ -213,7 +216,7 @@ class scraper:
         except:
             print("Exception: No search term input")
     
-    @decorators.exceptionHandling
+    #@decorators.exceptionHandling
     def findSearchbar(self, searchTerm) -> None:
         '''
         This function finds the searchbar and calls the searchbarTextAndClick() function with the searchTerm parameter.
@@ -239,7 +242,8 @@ class scraper:
         
         '''
 
-    @decorators.exceptionHandling
+    #@decorators.exceptionHandling
+    @exceptionHandling
     def home(self) -> None:
         '''
         Finds the title and clicks it.
@@ -354,7 +358,7 @@ class scraper:
         self.getTotalPages()
         self.getSearchList()
 
-    @decorators.exceptionHandling
+    @exceptionHandling
     def getTotalPages(self) -> None:
         '''
         This function counts the total number of page results.
@@ -698,7 +702,7 @@ class scraper:
             link = i.get_attribute('src')
             data.imageLinks.append(link)
 
-    @decorators.exceptionHandling
+    @exceptionHandling
     def getRecipeDetails(self, url) -> None:
         '''
         This function calls the scrape functions
