@@ -34,10 +34,14 @@ from selenium.webdriver.chrome.options import Options
 #driver = webdriver.Chrome()
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
+options.headless = True
 driver = webdriver.Chrome(options=options)
 
 
-
+# Make a web driver in headless mode
+#options = Options()
+#options.headless = True
+#driver = webdriver.Chrome(options=options)
 
 class data:
 
