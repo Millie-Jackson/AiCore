@@ -33,6 +33,9 @@ from selenium.webdriver.chrome.options import Options
 
 #driver = webdriver.Chrome()
 options = webdriver.ChromeOptions()
+options.add_argument('--disable-dev-shm-usage')
+options.add_argument('--no-sandbox')
+options.add_argument("--window-size=1024, 768")
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
 options.headless = True
 driver = webdriver.Chrome(options=options)
