@@ -30,12 +30,12 @@ VSCode:
 GutHub:
 
     - industry standard and was used for its version control
+    - allows for CI/CD using actions and secrets
     
 Selenium:
 
     - it is a popular freeware automation tool, its also open source and has good documentaion.
-    - it can also run multiple scripts on multiple urls at once which matched the end goal of scraping and comparing recipies with similar names from more than one 
-site
+    - it can also run multiple scripts on multiple urls at once which matched the end goal of scraping and comparing recipies with similar names from more than one site
 
 Chrome Driver:
 
@@ -92,7 +92,7 @@ Specific:
 Scraping:
 
     - gets the url (when navigating to a specific page or storing recipe pages for later use)
-    - finds the first page of recipes, returnes the url and modifies it in order to predict the next page url. Each url is then stored in a list which displays its         size. Currently capped at 5 for performance reasons. It cant detect how many total pages there are on a site yet
+    - finds the first page of recipes, returnes the url and modifies it in order to predict the next page url. Each url is then stored in a list which displays its size. Currently capped at 5 for performance reasons. It cant detect how many total pages there are on a site yet
     - retrieves text and image data froma recipe page using XPaths
     - writes all scrapped details to a JSON file (text and image links)
     - downloads images into recipe specific files
@@ -103,35 +103,37 @@ Scraping:
 ![image](https://user-images.githubusercontent.com/100158073/165974032-499039e8-4c97-48a0-bed5-ba5bd6aca19e.png)
 
 User Friendly ID:
-- Create a user friendly id by editing the recipe page url, removing the unnecessary characters with .repace and keeping the default id defined by the website 
-- Used for debugging and catagorising
-(Recipe name -> 3 diget identifier)
+
+    - Create a user friendly id by editing the recipe page url, removing the unnecessary characters with .repace and keeping the default id defined by the website 
+    - Used for debugging and catagorising (Recipe name -> 3 diget identifier)
 
 UUID:
 
-- Creates a system id using UUID, a 124 bit lable, use is standard in the industry
+    - Creates a system id using UUID, a 124 bit lable, use is standard in the industry
 
 ![image](https://user-images.githubusercontent.com/100158073/176398340-3cac3d35-93cc-4b09-9259-052366b6418f.png)
 
 Scrapes Recipe Details:
 
-- Finds the element and downloads the text using .text
-- Finds the image container and stores the link for each image in a list
-- Stores each element in a dictionary. Most elements are single strings, the last element is a list of image links
-- Uses error hadndling and wait functions for flexability
+    - Finds the element and downloads the text using .text
+    - Finds the image container and stores the link for each image in a list
+    - Stores each element in a dictionary. Most elements are single strings, the last element is a list of image links
+    - Uses error hadndling and wait functions for flexability
 
 JSON File:
-- Creates a folder to store JSON files in
-- Uses error handeling incase the file already exists
-- Handels error 'TypeError: Object of type UUID is not JSON serializable' by encoding the UUID by changing the type of the UUID
-- Writes the recipe details dictionary to a JSON files
-- Handels error 'TypeError: Object of type WebElement is not JSON serializable' by converting the dictionary to a string
+
+    - Creates a folder to store JSON files in
+    - Uses error handeling incase the file already exists
+    - Handels error 'TypeError: Object of type UUID is not JSON serializable' by encoding the UUID by changing the type of the UUID
+    - Writes the recipe details dictionary to a JSON files
+    - Handels error 'TypeError: Object of type WebElement is not JSON serializable' by converting the dictionary to a string
 
 Downloads Images:
-- Create a directory with error handling incase the folder already exists
-- Remove the numbers from the end of the user friendly ID and use it to create a recipe specific folder
-- Solve 403 Forbidden Error by adding headers
-- Create a filename using the recipe name and file type
+
+    - Create a directory with error handling incase the folder already exists
+    - Remove the numbers from the end of the user friendly ID and use it to create a recipe specific folder
+    - Solve 403 Forbidden Error by adding headers
+    - Create a filename using the recipe name and file type
 
 ![image](https://user-images.githubusercontent.com/100158073/176403675-92975bd7-cc35-4470-8951-69ae9b85f399.png)
 
@@ -150,3 +152,14 @@ Testing:
     - integration tests file on functions chains
     - tests look for redundency and validate the data scraped
     - runts as a testsuite
+
+Containerizing:
+    
+    - uses a .dockerfile to build the necessary dependencies from an auto generated  requirements.txt
+    - pushes the docker image to dockerhub
+
+CI/CD:
+
+    - uses git secrets to log into dockerhub
+    - uses git actions to run the scraper-
+    - then updates aws, instance and bucket with any new data
